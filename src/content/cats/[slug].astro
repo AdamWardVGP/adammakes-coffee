@@ -1,0 +1,23 @@
+---
+import { getEntryBySlug } from "astro:content";
+import { getCollection } from "astro:content";
+
+const { slug } = Astro.params;
+const entry = await getEntryBySlug("recipes", slug);
+
+if (!entry) {
+    throw new Error("Recipe not found");
+}
+
+const { Content } = await entry.render();
+---
+
+<html>
+<head>
+    <title>{entry.data.title}</title>
+</head>
+<body>
+<h1>{entry.data.title}</h1>
+<Content />
+</body>
+</html>

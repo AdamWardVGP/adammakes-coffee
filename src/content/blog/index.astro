@@ -1,0 +1,19 @@
+---
+---
+import { getCollection } from "astro:content";
+
+const recipes = await getCollection("recipes");
+---
+
+<h1>Recipes</h1>
+
+<ul>
+    {recipes.map((recipe) => (
+            <li>
+                <a href={`/recipes/${recipe.slug}`}>
+                    {recipe.data.title}
+                </a>
+            </li>
+    ))}
+</ul>
+---
