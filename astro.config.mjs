@@ -1,5 +1,8 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-// https://astro.build/config
-export default defineConfig({});
+export default defineConfig({
+    site: 'https://AdamWardVGP.github.io',
+    base: '/adammakes.coffee', // only if NOT username.github.io
+    output: 'static'
+});
