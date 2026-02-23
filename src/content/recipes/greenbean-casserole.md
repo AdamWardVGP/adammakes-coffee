@@ -3,11 +3,9 @@ title: "Green Bean Casserole"
 date: 2026-02-22
 ---
 
-> TODO: Insert life story here, and a bunch of annoying ads
-
 I make this every year for Friendsgiving by prepping everything at home, transporting it in containers, then assembling and baking on prem.
 
-**Credit** this originally came from [Babish's Youtube](https://www.babi.sh/recipes/thanksgivingsides) but has undergone some itteration addressing some problems I had with the recipe.
+**Credit** this came from [Babish's Thanksgiving Sides YouTube](https://www.babi.sh/recipes/thanksgivingsides) but has undergone iteration addressing problems I had with the original recipe.
 
 ---
 
@@ -36,7 +34,7 @@ How many does it serve? Good question. I don't know it always vanishes.
 3. Add green beans, wait until boiling resumes (~6 min), then cook ~2 min until bright green.
 4. Drain in a strainer and rinse with cold water to stop cooking.
 
-> Tip: If assembling later, store green beans in containers and refrigerate.
+> 💡 If assembling later, store green beans in containers and refrigerate.
 
 ---
 
@@ -54,6 +52,8 @@ How many does it serve? Good question. I don't know it always vanishes.
 7. Add roux to mushrooms along with chicken stock, heavy cream, and soy sauce. Stir to combine.
 8. Reduce for ~30 min (medium-high) until thickened. Test: run your finger along a spoon — the imprint should hold its shape.
 9. Let cool and transfer to another container.
+
+> 💡 If assembling later, pour soup into a container and refrigerate.
 
 ---
 
