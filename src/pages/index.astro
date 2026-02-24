@@ -33,7 +33,10 @@ const entityBasePath: Record<string, string> = {
 };
 ---
 
-<BaseLayout>
+<BaseLayout
+    title="Home"
+    description="Recent updates across recipes, blog posts, and cats."
+>
     <section class="updates">
         <h1>Recent Updates</h1>
         {updates.length === 0 ? (

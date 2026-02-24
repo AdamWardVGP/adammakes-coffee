@@ -5,7 +5,10 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 const recipes = await getCollection("recipes");
 ---
 
-<BaseLayout>
+<BaseLayout
+    title="Recipes"
+    description="Collected recipes with personal tweaks and no nonsense."
+>
     <h1>Recipes</h1>
     <p>
         Disclaimer: I cannot take credit for pretty much any of the recipes here. The vast majority I
