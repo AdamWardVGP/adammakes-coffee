@@ -1,6 +1,7 @@
 ---
 title: "Green Bean Casserole"
 date: 2026-02-22
+description: "The green bean recipe I'll be making for the rest of my life."
 ---
 
 I make this every year for Friendsgiving by prepping everything at home, transporting it in containers, then assembling and baking on prem.

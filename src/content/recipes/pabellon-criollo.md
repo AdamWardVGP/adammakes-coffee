@@ -1,7 +1,7 @@
 ---
 title: "Pabellón Criollo"
 date: 2026-02-23
-description: "GOYA-based shredded beef with black beans, and rice."
+description: "Venezuelan favorite: Saucy, flavorful shredded beef with black beans & cheese over rice."
 ---
 
 I first found this dish from [Arepa Zone](https://www.arepazone.com/) when I lived in D.C. This became my staple for lunch 2-3 times per week because it was delicious. When I came back to CA I wanted to do some "meal prep" style dinners, and found this [Version from GOYA](https://www.goya.com/en/recipes/venezuelan-shredded-beef/) that I've since made a few modifications too.
