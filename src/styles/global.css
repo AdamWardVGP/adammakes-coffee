@@ -10,11 +10,17 @@
 .top-bar-inner {
     max-width: 900px;
     margin: 0 auto;
-    padding: 0.9rem 1.5rem;
+    padding: 10px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.top-bar-logo {
+    width: 156px;
+    object-fit: contain;
+    display: block;
 }
 
 /* Logo */
@@ -41,6 +47,28 @@
     max-width: 900px;
     margin: 0 auto;
     padding: 2.5rem 1.5rem;
+}
+
+.updates-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: grid;
+    gap: 1rem;
+}
+
+.update-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    background: var(--bg-secondary);
+}
+
+.update-meta {
+    margin: 0.25rem 0 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: capitalize;
 }
 
 /* Optional: tighten vertical rhythm */

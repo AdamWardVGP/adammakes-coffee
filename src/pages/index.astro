@@ -1,18 +1,57 @@
 ---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
 
-import BaseLayout from "../layouts/BaseLayout.astro";---
+const loadCollection = async (name: "recipes" | "blog" | "cats") => {
+    try {
+        return await getCollection(name);
+    } catch {
+        return [];
+    }
+};
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-	<BaseLayout>
-	</BaseLayout>
-	</body>
-</html>
+const [recipes, blog, cats] = await Promise.all([
+    loadCollection("recipes"),
+    loadCollection("blog"),
+    loadCollection("cats"),
+]);
+
+const updates = [...recipes, ...blog, ...cats]
+    .map((entry) => ({
+        slug: entry.slug,
+        title: entry.data.title,
+        date: entry.data.date,
+        description: entry.data.description,
+        collection: entry.collection,
+    }))
+    .sort((a, b) => b.date.getTime() - a.date.getTime());
+
+const entityBasePath: Record<string, string> = {
+    recipes: "/recipes",
+    blog: "/blog",
+    cats: "/cats",
+};
+---
+
+<BaseLayout>
+    <section class="updates">
+        <h1>Recent Updates</h1>
+        {updates.length === 0 ? (
+            <p>No updates yet.</p>
+        ) : (
+            <ul class="updates-list">
+                {updates.map((update) => (
+                    <li class="update-item">
+                        <a href={`${entityBasePath[update.collection]}/${update.slug}`}>
+                            {update.title}
+                        </a>
+                        <p class="update-meta">
+                            {update.collection} · {update.date.toLocaleDateString()}
+                        </p>
+                        {update.description && <p>{update.description}</p>}
+                    </li>
+                ))}
+            </ul>
+        )}
+    </section>
+</BaseLayout>
