@@ -79,8 +79,76 @@ const entityBasePath: Record<string, string> = {
                     </div>
                 </div>
                 <div class="retro-widget">
-                    <h3>Now Playing</h3>
-                    <p class="tiny-note">Music module coming soon.</p>
+                    <div class="winamp-mini" aria-label="Now Playing module mockup">
+                        <div class="winamp-titlebar">
+                            <span>FtwAmp v0.1</span>
+                            <div class="winamp-controls" aria-hidden="true">
+                                <span>_</span>
+                                <span>□</span>
+                                <span>×</span>
+                            </div>
+                        </div>
+                        <div class="winamp-body">
+                            <div class="winamp-tier winamp-top">
+                                <p class="winamp-track">Now Playing &lt;Song Name&gt;</p>
+                                <div class="winamp-controls-row">
+                                    <div class="winamp-visualizer half" aria-hidden="true">
+                                        <span></span><span></span><span></span><span></span><span></span>
+                                        <span></span><span></span><span></span><span></span><span></span>
+                                    </div>
+                                    <div class="winamp-buttons">
+                                        <button type="button">⏮</button>
+                                        <button type="button">▶</button>
+                                        <button type="button">⏭</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="winamp-tier winamp-mid">
+                                <div class="eq-shell" aria-hidden="true">
+                                    <div class="eq-left">
+                                        <span>ON</span>
+                                        <span>AUTO</span>
+                                    </div>
+                                    <div class="eq-main">
+                                        <div class="eq-sliders">
+                                            <div class="eq-slider"><span class="eq-fill"></span><span class="eq-knob"></span></div>
+                                            <div class="eq-slider"><span class="eq-fill"></span><span class="eq-knob"></span></div>
+                                            <div class="eq-slider"><span class="eq-fill"></span><span class="eq-knob"></span></div>
+                                            <div class="eq-slider"><span class="eq-fill"></span><span class="eq-knob"></span></div>
+                                            <div class="eq-slider"><span class="eq-fill"></span><span class="eq-knob"></span></div>
+                                            <div class="eq-slider"><span class="eq-fill"></span><span class="eq-knob"></span></div>
+                                            <div class="eq-slider"><span class="eq-fill"></span><span class="eq-knob"></span></div>
+                                            <div class="eq-slider"><span class="eq-fill"></span><span class="eq-knob"></span></div>
+                                            <div class="eq-slider"><span class="eq-fill"></span><span class="eq-knob"></span></div>
+                                            <div class="eq-slider"><span class="eq-fill"></span><span class="eq-knob"></span></div>
+                                        </div>
+                                        <div class="eq-labels">
+                                            <span>60</span>
+                                            <span>170</span>
+                                            <span>310</span>
+                                            <span>600</span>
+                                            <span>1k</span>
+                                            <span>3k</span>
+                                            <span>6k</span>
+                                            <span>12k</span>
+                                            <span>14k</span>
+                                            <span>16k</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="winamp-tier winamp-bottom">
+                                <p class="tracklist-title">Tracklist</p>
+                                <ol class="tracklist">
+                                    <li class="active">synthwave-placeholder.mp3</li>
+                                    <li>rain-at-2am.wav</li>
+                                    <li>compiler-dreams.flac</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </article>
         </aside>

@@ -346,6 +346,259 @@
     gap: 0.75rem;
 }
 
+.winamp-mini {
+    border: 1px solid #2f3c56;
+    background: #1b2437;
+    box-shadow: inset 0 0 0 1px #5f6f8e;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.winamp-titlebar {
+    background: linear-gradient(90deg, #2f4f77 0%, #4a698f 42%, #2c3f63 100%);
+    border-bottom: 1px solid #1a2539;
+    color: #d7e4ff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.18rem 0.35rem;
+    font-family: "Courier New", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
+}
+
+.winamp-controls {
+    display: flex;
+    gap: 0.25rem;
+    color: #f4f7ff;
+    font-size: 0.62rem;
+}
+
+.winamp-body {
+    padding: 0.38rem;
+    background:
+            linear-gradient(180deg, rgba(130, 170, 255, 0.08), rgba(2, 19, 32, 0.6)),
+            #1a2234;
+}
+
+.winamp-tier {
+    border: 1px solid #2b3954;
+    background: rgba(5, 18, 34, 0.7);
+    padding: 0.28rem;
+}
+
+.winamp-tier + .winamp-tier {
+    margin-top: 0.26rem;
+}
+
+.winamp-top {
+    display: grid;
+    gap: 0.3rem;
+}
+
+.winamp-track {
+    margin: 0;
+    font-family: "Courier New", monospace;
+    font-size: 0.66rem;
+    color: #d7e4ff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.winamp-controls-row {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.winamp-visualizer {
+    height: 16px;
+    border: 1px solid #2b3954;
+    background: #051222;
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 1px;
+    align-items: end;
+    padding: 1px;
+}
+
+.winamp-visualizer span {
+    display: block;
+    background:
+            repeating-linear-gradient(
+                    to top,
+                    rgba(197, 228, 120, 0.95) 0,
+                    rgba(197, 228, 120, 0.95) 2px,
+                    rgba(197, 228, 120, 0.25) 2px,
+                    rgba(197, 228, 120, 0.25) 3px
+            );
+    min-height: 2px;
+    animation: winamp-bar 0.95s steps(3, end) infinite;
+    border-radius: 1px;
+}
+
+.winamp-visualizer span:nth-child(2) { animation-delay: 0.1s; }
+.winamp-visualizer span:nth-child(3) { animation-delay: 0.25s; }
+.winamp-visualizer span:nth-child(4) { animation-delay: 0.05s; }
+.winamp-visualizer span:nth-child(5) { animation-delay: 0.3s; }
+.winamp-visualizer span:nth-child(6) { animation-delay: 0.14s; }
+.winamp-visualizer span:nth-child(7) { animation-delay: 0.35s; }
+.winamp-visualizer span:nth-child(8) { animation-delay: 0.2s; }
+.winamp-visualizer span:nth-child(9) { animation-delay: 0.28s; }
+.winamp-visualizer span:nth-child(10) { animation-delay: 0.07s; }
+
+.winamp-visualizer.half {
+    width: 44%;
+    min-width: 88px;
+}
+
+.winamp-mid {
+    display: grid;
+    gap: 0.2rem;
+}
+
+.winamp-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.2rem;
+}
+
+.winamp-buttons button {
+    font-size: 0.68rem;
+    padding: 0;
+    height: 18px;
+    min-width: 24px;
+    border: 1px solid #2f3c56;
+    border-radius: 2px;
+    background: linear-gradient(180deg, #405a82, #2a3b5a);
+    color: #e6efff;
+}
+
+.winamp-buttons button:hover {
+    background: linear-gradient(180deg, #4b6a97, #2f4468);
+}
+
+.eq-shell {
+    border: 1px solid #2d3d5c;
+    background: linear-gradient(180deg, #243552, #1b2943);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.28rem;
+    align-items: stretch;
+    padding: 0.2rem;
+}
+
+.eq-left {
+    display: grid;
+    gap: 0.14rem;
+    align-content: start;
+}
+
+.eq-left span {
+    border: 1px solid #3a4c6d;
+    background: #2a3c5d;
+    color: #d8e6ff;
+    font-family: "Courier New", monospace;
+    font-size: 0.53rem;
+    padding: 0.06rem 0.2rem;
+    text-align: center;
+}
+
+.eq-main {
+    display: grid;
+    gap: 0.15rem;
+}
+
+.eq-sliders {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 0.16rem;
+    align-items: end;
+    padding: 0 0.08rem;
+}
+
+.eq-slider {
+    position: relative;
+    height: 36px;
+    border: 1px solid #2f4567;
+    background: linear-gradient(180deg, #17233a, #10192c);
+}
+
+.eq-fill {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 2px;
+    width: 3px;
+    height: 24px;
+    background: linear-gradient(180deg, #f1df7a, #c8b93f);
+    box-shadow: 0 0 4px rgba(241, 223, 122, 0.35);
+}
+
+.eq-knob {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    bottom: 12px;
+    width: 7px;
+    height: 4px;
+    border: 1px solid #cad7ef;
+    background: #f2f6ff;
+}
+
+.eq-labels {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 0.16rem;
+    color: #9fb7dc;
+    font-family: "Courier New", monospace;
+    font-size: 0.52rem;
+}
+
+.eq-labels span {
+    text-align: center;
+}
+
+.winamp-bottom {
+    min-height: 64px;
+}
+
+.tracklist-title {
+    margin: 0;
+    font-family: "Courier New", monospace;
+    font-size: 0.65rem;
+    color: #9fb7dc;
+    letter-spacing: 0.04em;
+}
+
+.tracklist {
+    margin: 0.2rem 0 0;
+    padding-left: 1.1rem;
+    max-height: 46px;
+    overflow: auto;
+}
+
+.tracklist li {
+    font-family: "Courier New", monospace;
+    font-size: 0.62rem;
+    color: #c2d5f5;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.tracklist li.active {
+    color: #c5e478;
+}
+
+@keyframes winamp-bar {
+    0% { height: 3px; }
+    33% { height: 14px; }
+    66% { height: 7px; }
+    100% { height: 12px; }
+}
+
 /* Optional: tighten vertical rhythm */
 h1:first-child {
     margin-top: 0;
