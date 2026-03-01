@@ -22,8 +22,9 @@
     align-items: center;
     gap: 1rem;
     background:
-            radial-gradient(circle at 20% 20%, rgba(127, 219, 202, 0.12), transparent 45%),
-            radial-gradient(circle at 85% 35%, rgba(130, 170, 255, 0.12), transparent 40%),
+            linear-gradient(180deg, rgba(130, 170, 255, 0.12), transparent),
+            radial-gradient(circle at 20% 20%, rgba(127, 219, 202, 0.18), transparent 45%),
+            radial-gradient(circle at 85% 35%, rgba(130, 170, 255, 0.18), transparent 40%),
             var(--bg-secondary);
 }
 
@@ -71,12 +72,23 @@
 }
 
 .tab-nav a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
     text-align: center;
-    padding: 0.7rem 0.45rem;
+    padding: 0.55rem 0.45rem;
     color: var(--text-secondary);
     text-decoration: none;
     font-weight: 600;
     border-right: 1px solid var(--border);
+}
+
+.tab-nav a img {
+    width: 50px;
+    height: 50px;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.35));
 }
 
 .tab-nav a:last-child {
@@ -87,6 +99,27 @@
 .tab-nav a.active {
     color: var(--text-bright);
     background: rgba(127, 219, 202, 0.08);
+}
+
+.charm-row {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.45rem;
+    padding: 0.5rem 0.75rem;
+    background: linear-gradient(180deg, rgba(11, 41, 66, 0.9), rgba(2, 19, 32, 0.95));
+    border-top: 1px solid var(--border);
+}
+
+.charm-row span {
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.25rem 0.4rem;
+    background: rgba(127, 219, 202, 0.06);
 }
 
 .container {
@@ -159,6 +192,18 @@
     font-size: 1rem;
 }
 
+.pillar-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.pillar-heading img {
+    width: 50px;
+    height: 50px;
+    image-rendering: pixelated;
+}
+
 .pillar p {
     margin: 0;
     font-size: 0.95rem;
@@ -167,6 +212,46 @@
 .tiny-note {
     color: var(--text-secondary);
     font-size: 0.9rem;
+}
+
+.sticker-row {
+    margin-top: 0.85rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    color: var(--accent-yellow);
+}
+
+.retro-widget-panel {
+    margin-top: 1rem;
+}
+
+.retro-widget {
+    padding: 0.55rem;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    margin-bottom: 0.6rem;
+    background: rgba(1, 22, 39, 0.65);
+}
+
+.retro-widget:last-child {
+    margin-bottom: 0;
+}
+
+.retro-widget h3 {
+    margin: 0 0 0.2rem;
+    font-size: 0.95rem;
+    color: var(--accent-yellow);
+}
+
+#page-counter {
+    font-family: "Courier New", monospace;
+    color: var(--accent-green);
+    font-weight: 700;
+}
+
+.webring-links {
+    display: flex;
+    gap: 0.75rem;
 }
 
 /* Optional: tighten vertical rhythm */
@@ -213,8 +298,21 @@ body {
     margin: 0;
     padding: 0;
     background:
-            radial-gradient(circle at 1px 1px, rgba(127, 219, 202, 0.16) 1px, transparent 0) 0 0 / 24px 24px,
-            linear-gradient(180deg, #011020, var(--bg-primary));
+            repeating-linear-gradient(
+                    to right,
+                    rgba(127, 219, 202, 0.12) 0,
+                    rgba(127, 219, 202, 0.12) 1px,
+                    transparent 1px,
+                    transparent 22px
+            ),
+            repeating-linear-gradient(
+                    to bottom,
+                    rgba(130, 170, 255, 0.1) 0,
+                    rgba(130, 170, 255, 0.1) 1px,
+                    transparent 1px,
+                    transparent 22px
+            ),
+            linear-gradient(180deg, #011020 0%, #041a2e 40%, #011627 100%);
     color: var(--text-primary);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     line-height: 1.6;
@@ -358,6 +456,19 @@ textarea::placeholder {
     .hero-inner {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .tab-nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tab-nav a {
+        justify-content: flex-start;
+        padding-left: 0.75rem;
+    }
+
+    .charm-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .portal-grid {

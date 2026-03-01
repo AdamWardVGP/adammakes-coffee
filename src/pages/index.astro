@@ -39,14 +39,6 @@ const entityBasePath: Record<string, string> = {
 >
     <section class="portal-grid">
         <aside>
-            <!--<article class="panel intro-card" id="coffee">-->
-            <!--    <h2>coffee</h2>-->
-            <!--    <p>-->
-            <!--        My home base. Notes, experiments, and rabbit holes.-->
-            <!--    </p>-->
-            <!--    <p class="tiny-note">Nothing polished. Everything useful.</p>-->
-            <!--</article>-->
-
             <article class="panel">
                 <h2>Updates</h2>
                 {updates.length === 0 ? (
@@ -66,12 +58,26 @@ const entityBasePath: Record<string, string> = {
                     </ul>
                 )}
             </article>
+
+            <article class="panel retro-widget-panel">
+                <h2>Toybox</h2>
+                <div class="retro-widget">
+                    <h3>Page Counter</h3>
+                    <p>
+                        Visitor # <span id="page-counter">000001</span>
+                    </p>
+                </div>
+                <div class="retro-widget">
+                    <h3>Now Playing</h3>
+                    <p class="tiny-note">Music module coming soon.</p>
+                </div>
+            </article>
         </aside>
 
         <section class="panel">
             <h2>Welcome</h2>
             <p>
-                adammakes is my attempt to log my personal projects, weekend fun, and publish items that could be helpful for others. Not everything will be polishe, and actually almost everything is a work in progress.
+                adammakes is my attempt to log my personal projects, weekend fun, and publish items that could be helpful for others. Not everything will be polished, and actually almost everything is a work in progress.
             </p>
             <p>
                 But here it is, and I'm glad you stopped by!
@@ -79,25 +85,45 @@ const entityBasePath: Record<string, string> = {
 
             <div class="pillars">
                 <article class="pillar" id="food">
-                    <h3>food</h3>
+                    <h3 class="pillar-heading">
+                        <span>food</span>
+                    </h3>
                     <p>
-                        Recipe archive with edits, notes, and no 3 page life-story-scroll nonsense before finding the actual recipe.
+                        Recipe archive with edits, notes, and no 3 page life-story.
                         <a href="/recipes">Open recipes</a>.
                     </p>
                 </article>
                 <article class="pillar" id="catPhotos">
-                    <h3>catPhotos</h3>
+                    <h3 class="pillar-heading">
+                        <span>catPhotos</span>
+                    </h3>
                     <p>Ada and Izzy would love it if you came by and said hello!</p>
                 </article>
                 <article class="pillar" id="software">
-                    <h3>software</h3>
+                    <h3 class="pillar-heading">
+                        <span>software</span>
+                    </h3>
                     <p>Build logs, experiments, and project updates.</p>
                 </article>
                 <article class="pillar">
-                    <h3>coffee</h3>
+                    <h3 class="pillar-heading">
+                        <span>coffee</span>
+                    </h3>
                     <p>General updates, random finds and everything else.</p>
                 </article>
             </div>
         </section>
     </section>
+
+    <script is:inline>
+        const key = "adammakes-page-counter";
+        const startValue = 1;
+        const current = Number(localStorage.getItem(key) || startValue);
+        const next = Number.isFinite(current) ? current + 1 : startValue;
+        localStorage.setItem(key, String(next));
+        const target = document.getElementById("page-counter");
+        if (target) {
+            target.textContent = String(next).padStart(6, "0");
+        }
+    </script>
 </BaseLayout>
