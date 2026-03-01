@@ -251,6 +251,96 @@
     font-weight: 700;
 }
 
+.terminal-counter {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background:
+            linear-gradient(180deg, rgba(127, 219, 202, 0.04), rgba(1, 22, 39, 0.82)),
+            rgba(1, 22, 39, 0.95);
+    overflow: hidden;
+}
+
+.terminal-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.45rem;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(130, 170, 255, 0.18), rgba(11, 41, 66, 0.4));
+}
+
+.terminal-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(197, 228, 120, 0.55);
+}
+
+.terminal-title {
+    margin-left: 0.3rem;
+    font-family: "Courier New", monospace;
+    font-size: 0.72rem;
+    color: var(--accent-yellow);
+}
+
+.terminal-screen {
+    position: relative;
+    padding: 0.55rem 0.5rem 0.5rem;
+    font-family: "Courier New", monospace;
+}
+
+.terminal-screen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.05) 0,
+            rgba(255, 255, 255, 0.05) 1px,
+            transparent 1px,
+            transparent 3px
+    );
+    pointer-events: none;
+    mix-blend-mode: screen;
+}
+
+.terminal-screen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(130, 170, 255, 0.12), transparent 45%, rgba(127, 219, 202, 0.16));
+    pointer-events: none;
+}
+
+.terminal-line {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-size: 0.86rem;
+    letter-spacing: 0.01em;
+}
+
+.terminal-line + .terminal-line {
+    margin-top: 0.2rem;
+}
+
+.terminal-line .prompt {
+    color: var(--accent-cyan);
+    margin-right: 0.25rem;
+}
+
+#page-counter-value {
+    color: var(--accent-green);
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(197, 228, 120, 0.45);
+}
+
+.terminal-line.dim {
+    color: var(--text-secondary);
+    font-size: 0.74rem;
+}
+
 .webring-links {
     display: flex;
     gap: 0.75rem;

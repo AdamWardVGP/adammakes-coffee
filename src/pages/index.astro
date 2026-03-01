@@ -62,10 +62,21 @@ const entityBasePath: Record<string, string> = {
             <article class="panel retro-widget-panel">
                 <h2>Toybox</h2>
                 <div class="retro-widget">
-                    <h3>Page Counter</h3>
-                    <p>
-                        Visitor # <span id="page-counter">000001</span>
-                    </p>
+                    <div class="terminal-counter" aria-live="polite">
+                        <div class="terminal-titlebar">
+                            <span class="terminal-dot"></span>
+                            <span class="terminal-dot"></span>
+                            <span class="terminal-dot"></span>
+                            <span class="terminal-title">Visitor Counter</span>
+                        </div>
+                        <div class="terminal-screen">
+                            <p class="terminal-line">
+                                <span class="prompt">C:\id\you&gt;</span>
+                                <span>visitor=</span><span id="page-counter-value">000001</span>
+                            </p>
+                            <p class="terminal-line dim">status: online</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="retro-widget">
                     <h3>Now Playing</h3>
@@ -121,9 +132,9 @@ const entityBasePath: Record<string, string> = {
         const current = Number(localStorage.getItem(key) || startValue);
         const next = Number.isFinite(current) ? current + 1 : startValue;
         localStorage.setItem(key, String(next));
-        const target = document.getElementById("page-counter");
+        const target = document.getElementById("page-counter-value");
         if (target) {
-            target.textContent = String(next).padStart(6, "0");
+            target.textContent = String(next).padStart(6, "0").slice(-6);
         }
     </script>
 </BaseLayout>
