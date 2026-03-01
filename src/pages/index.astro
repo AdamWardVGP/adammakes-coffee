@@ -90,16 +90,16 @@ const entityBasePath: Record<string, string> = {
                         </div>
                         <div class="winamp-body">
                             <div class="winamp-tier winamp-top">
-                                <p class="winamp-track">Now Playing &lt;Song Name&gt;</p>
+                                <p class="winamp-track">Now Playing <span id="now-playing-name">&lt;Song Name&gt;</span></p>
                                 <div class="winamp-controls-row">
-                                    <div class="winamp-visualizer half" aria-hidden="true">
+                                    <div class="winamp-visualizer half" id="player-visualizer" aria-hidden="true">
                                         <span></span><span></span><span></span><span></span><span></span>
                                         <span></span><span></span><span></span><span></span><span></span>
                                     </div>
                                     <div class="winamp-buttons">
-                                        <button type="button">⏮</button>
-                                        <button type="button">▶</button>
-                                        <button type="button">⏭</button>
+                                        <button id="player-prev" type="button" aria-label="Previous track">⏮</button>
+                                        <button id="player-playpause" type="button" aria-label="Play">▶</button>
+                                        <button id="player-next" type="button" aria-label="Next track">⏭</button>
                                     </div>
                                 </div>
                             </div>
@@ -141,12 +141,28 @@ const entityBasePath: Record<string, string> = {
 
                             <div class="winamp-tier winamp-bottom">
                                 <p class="tracklist-title">Tracklist</p>
-                                <ol class="tracklist">
-                                    <li class="active">synthwave-placeholder.mp3</li>
-                                    <li>rain-at-2am.wav</li>
-                                    <li>compiler-dreams.flac</li>
+                                <ol class="tracklist" id="player-tracklist">
+                                    <li class="active">
+                                        <button
+                                            data-url="https://soundcloud.com/gouranga/this-must-be-the-place-psychemagik-naive-edit"
+                                            type="button"
+                                        >
+                                            This Must Be The Place (Psychemagik Naive Edit)
+                                        </button>
+                                    </li>
                                 </ol>
                             </div>
+                        </div>
+                    </div>
+                    <div class="legal-embed">
+                        <div class="embed-shell">
+                            <iframe
+                                id="soundcloud-official-player"
+                                title="Official track embed"
+                                src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/gouranga/this-must-be-the-place-psychemagik-naive-edit&color=%2382AAFF&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=false"
+                                loading="lazy"
+                                allow="autoplay"
+                            ></iframe>
                         </div>
                     </div>
                 </div>
@@ -203,6 +219,146 @@ const entityBasePath: Record<string, string> = {
         const target = document.getElementById("page-counter-value");
         if (target) {
             target.textContent = String(next).padStart(6, "0").slice(-6);
+        }
+
+        const soundcloudFrame = document.getElementById("soundcloud-official-player");
+        const prevButton = document.getElementById("player-prev");
+        const playPauseButton = document.getElementById("player-playpause");
+        const nextButton = document.getElementById("player-next");
+        const nowPlaying = document.getElementById("now-playing-name");
+        const tracklist = document.getElementById("player-tracklist");
+        const visualizer = document.getElementById("player-visualizer");
+
+        if (soundcloudFrame && prevButton && playPauseButton && nextButton && nowPlaying && tracklist && visualizer) {
+            const bars = Array.from(visualizer.querySelectorAll("span"));
+            const trackButtons = Array.from(tracklist.querySelectorAll("button"));
+            let visualizerTimer;
+            let isPlaying = false;
+            let widget;
+
+            const playerOpts = {
+                auto_play: false,
+                show_comments: false,
+                show_reposts: false,
+                show_teaser: true,
+                visual: false,
+            };
+
+            const loadScript = async () => new Promise((resolve, reject) => {
+                if (window.SC && window.SC.Widget) {
+                    resolve(true);
+                    return;
+                }
+                const script = document.createElement("script");
+                script.src = "https://w.soundcloud.com/player/api.js";
+                script.async = true;
+                script.onload = () => resolve(true);
+                script.onerror = () => reject(new Error("Failed to load SoundCloud Widget API"));
+                document.head.appendChild(script);
+            });
+
+            const startVisualizer = () => {
+                clearInterval(visualizerTimer);
+                visualizerTimer = setInterval(() => {
+                    bars.forEach((bar) => {
+                        const height = 3 + Math.floor(Math.random() * 12);
+                        bar.style.height = `${height}px`;
+                    });
+                }, 90);
+            };
+
+            const stopVisualizer = () => {
+                clearInterval(visualizerTimer);
+                bars.forEach((bar) => {
+                    bar.style.height = "3px";
+                });
+            };
+
+            const updatePlayPauseUi = () => {
+                playPauseButton.textContent = isPlaying ? "⏸" : "▶";
+                playPauseButton.setAttribute("aria-label", isPlaying ? "Pause" : "Play");
+                visualizer.classList.toggle("live", isPlaying);
+                if (isPlaying) {
+                    startVisualizer();
+                } else {
+                    stopVisualizer();
+                }
+            };
+
+            const setActiveTrackByUrl = (trackUrl) => {
+                trackButtons.forEach((button) => {
+                    const isActive = button.dataset.url === trackUrl;
+                    button.parentElement?.classList.toggle("active", isActive);
+                });
+            };
+
+            const bindWidget = () => {
+                widget.bind(window.SC.Widget.Events.READY, () => {
+                    widget.getCurrentSound((sound) => {
+                        if (sound?.title) nowPlaying.textContent = sound.title;
+                        if (sound?.permalink_url) setActiveTrackByUrl(sound.permalink_url);
+                    });
+                    updatePlayPauseUi();
+                });
+
+                widget.bind(window.SC.Widget.Events.PLAY, () => {
+                    isPlaying = true;
+                    updatePlayPauseUi();
+                    widget.getCurrentSound((sound) => {
+                        if (sound?.title) nowPlaying.textContent = sound.title;
+                        if (sound?.permalink_url) setActiveTrackByUrl(sound.permalink_url);
+                    });
+                });
+
+                widget.bind(window.SC.Widget.Events.PAUSE, () => {
+                    isPlaying = false;
+                    updatePlayPauseUi();
+                });
+
+                widget.bind(window.SC.Widget.Events.FINISH, () => {
+                    isPlaying = false;
+                    updatePlayPauseUi();
+                });
+            };
+
+            loadScript().then(() => {
+                widget = window.SC.Widget(soundcloudFrame);
+                bindWidget();
+            }).catch(() => {
+                nowPlaying.textContent = "SoundCloud embed unavailable";
+            });
+
+            prevButton.addEventListener("click", () => {
+                if (!widget) return;
+                widget.seekTo(0);
+            });
+
+            nextButton.addEventListener("click", () => {
+                if (!widget) return;
+                widget.getDuration((duration) => {
+                    widget.getPosition((position) => {
+                        const jumpTo = Math.min(duration, position + 15000);
+                        widget.seekTo(jumpTo);
+                    });
+                });
+            });
+
+            playPauseButton.addEventListener("click", () => {
+                if (!widget) return;
+                widget.toggle();
+            });
+
+            trackButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    if (!widget) return;
+                    const url = button.dataset.url;
+                    if (!url) return;
+                    widget.load(url, { ...playerOpts, auto_play: true });
+                });
+            });
+
+            stopVisualizer();
+            updatePlayPauseUi();
         }
     </script>
 </BaseLayout>
