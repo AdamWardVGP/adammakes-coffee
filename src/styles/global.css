@@ -10,6 +10,8 @@
     background: linear-gradient(180deg, var(--bg-secondary), var(--bg-primary));
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
     overflow: hidden;
+    position: relative;
+    z-index: 1;
 }
 
 .retro-hero {
@@ -297,25 +299,132 @@ html,
 body {
     margin: 0;
     padding: 0;
+    min-height: 100%;
+    position: relative;
+    overflow-x: hidden;
     background:
             repeating-linear-gradient(
                     to right,
-                    rgba(127, 219, 202, 0.12) 0,
-                    rgba(127, 219, 202, 0.12) 1px,
+                    rgba(127, 219, 202, 0.24) 0,
+                    rgba(127, 219, 202, 0.24) 1px,
                     transparent 1px,
-                    transparent 22px
+                    transparent 20px
             ),
             repeating-linear-gradient(
                     to bottom,
-                    rgba(130, 170, 255, 0.1) 0,
-                    rgba(130, 170, 255, 0.1) 1px,
+                    rgba(130, 170, 255, 0.2) 0,
+                    rgba(130, 170, 255, 0.2) 1px,
                     transparent 1px,
-                    transparent 22px
+                    transparent 20px
             ),
-            linear-gradient(180deg, #011020 0%, #041a2e 40%, #011627 100%);
+            linear-gradient(180deg, #09071f 0%, #03223a 35%, #011627 70%, #01111d 100%);
     color: var(--text-primary);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     line-height: 1.6;
+}
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+body::before {
+    background:
+            radial-gradient(1200px 520px at 50% 115%, rgba(255, 80, 150, 0.18), transparent 65%),
+            radial-gradient(900px 380px at 50% 108%, rgba(130, 170, 255, 0.22), transparent 70%);
+}
+
+body::after {
+    background: linear-gradient(180deg, rgba(1, 22, 39, 0.08) 0%, rgba(1, 22, 39, 0.25) 55%, rgba(1, 22, 39, 0.5) 100%);
+}
+
+#binary-trail {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+}
+
+body.binary-cursor-enabled,
+body.binary-cursor-enabled * {
+    cursor: none !important;
+}
+
+#binary-cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    pointer-events: none;
+    width: 24px;
+    height: 31px;
+    opacity: 0;
+    transition: opacity 120ms ease-out, transform 120ms ease-out;
+    user-select: none;
+    animation: cursor-hue-shift 2.4s linear infinite;
+}
+
+#binary-cursor svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#binary-cursor.pulse {
+    transform: translate(-50%, -50%) scale(1.25);
+}
+
+@keyframes cursor-hue-shift {
+    0% {
+        filter: hue-rotate(0deg) saturate(1.15);
+    }
+    50% {
+        filter: hue-rotate(24deg) saturate(1.35);
+    }
+    100% {
+        filter: hue-rotate(0deg) saturate(1.15);
+    }
+}
+
+.binary-bit {
+    position: fixed;
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    opacity: 0.95;
+    transform: translate(-50%, -50%);
+    animation: binary-fade 850ms ease-out forwards;
+    text-shadow: 0 0 10px currentColor;
+    user-select: none;
+}
+
+.binary-bit.cyan {
+    color: var(--accent-cyan);
+}
+
+.binary-bit.blue {
+    color: var(--accent-blue);
+}
+
+.binary-bit.green {
+    color: var(--accent-green);
+}
+
+@keyframes binary-fade {
+    0% {
+        opacity: 0.95;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -80%) scale(0.85);
+    }
 }
 
 ::selection {
@@ -477,5 +586,16 @@ textarea::placeholder {
 
     .pillars {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .binary-bit {
+        animation: none;
+        opacity: 0;
+    }
+
+    #binary-cursor {
+        display: none;
     }
 }

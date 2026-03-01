@@ -72,5 +72,92 @@ const currentPath = Astro.url.pathname;
         <slot />
     </main>
 </div>
+<div id="binary-trail" aria-hidden="true"></div>
+<div id="binary-cursor" aria-hidden="true">
+    <svg viewBox="0 0 48 64" xmlns="http://www.w3.org/2000/svg" role="presentation">
+        <defs>
+            <linearGradient id="cursor-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#74e4ff" />
+                <stop offset="50%" stop-color="#6ea7ff" />
+                <stop offset="100%" stop-color="#ff4bd8" />
+            </linearGradient>
+            <filter id="cursor-glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feDropShadow dx="0" dy="0" stdDeviation="2.8" flood-color="#4ac8ff" flood-opacity="0.9" />
+                <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#ff42d6" flood-opacity="0.85" />
+            </filter>
+        </defs>
+        <path
+            d="M8 6 L8 57 L20 45 L26 62 L34 59 L28 42 L40 42 Z"
+            fill="#011627"
+            stroke="url(#cursor-gradient)"
+            stroke-width="4.1"
+            stroke-linejoin="round"
+            stroke-linecap="round"
+            filter="url(#cursor-glow)"
+        />
+    </svg>
+</div>
+<script is:inline>
+    (() => {
+        const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (isCoarsePointer || reduceMotion) return;
+
+        const trail = document.getElementById("binary-trail");
+        const cursor = document.getElementById("binary-cursor");
+        if (!trail || !cursor) return;
+
+        document.body.classList.add("binary-cursor-enabled");
+
+        let lastSpawn = 0;
+        let bitCount = 0;
+        const maxBits = 40;
+        const classes = ["cyan", "blue", "green"];
+
+        window.addEventListener("pointermove", (event) => {
+            const now = performance.now();
+            if (now - lastSpawn < 28) return;
+            lastSpawn = now;
+
+            cursor.style.left = `${event.clientX}px`;
+            cursor.style.top = `${event.clientY}px`;
+            cursor.style.opacity = "1";
+
+            const bit = document.createElement("span");
+            bit.className = `binary-bit ${classes[Math.floor(Math.random() * classes.length)]}`;
+            bit.textContent = Math.random() > 0.5 ? "1" : "0";
+
+            const jitterX = (Math.random() - 0.5) * 14;
+            const jitterY = (Math.random() - 0.5) * 14;
+            bit.style.left = `${event.clientX + jitterX}px`;
+            bit.style.top = `${event.clientY + jitterY}px`;
+
+            trail.appendChild(bit);
+            bitCount += 1;
+
+            bit.addEventListener("animationend", () => {
+                bit.remove();
+                bitCount = Math.max(0, bitCount - 1);
+            });
+
+            if (bitCount > maxBits) {
+                const first = trail.firstElementChild;
+                if (first) {
+                    first.remove();
+                    bitCount -= 1;
+                }
+            }
+        });
+
+        window.addEventListener("pointerdown", () => {
+            cursor.classList.add("pulse");
+            setTimeout(() => cursor.classList.remove("pulse"), 120);
+        });
+
+        window.addEventListener("pointerleave", () => {
+            cursor.style.opacity = "0";
+        });
+    })();
+</script>
 </body>
 </html>
