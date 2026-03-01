@@ -1,0 +1,27 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+    const cats = await getCollection("cats");
+    return cats.map((entry) => ({ params: { slug: entry.slug } }));
+}
+
+const { slug } = Astro.params;
+const cats = await getCollection("cats");
+const entry = cats.find((item) => item.slug === slug);
+
+if (!entry) {
+    throw new Error("Cat post not found");
+}
+
+const { Content } = await entry.render();
+---
+
+<BaseLayout
+    title={entry.data.title}
+    description={entry.data.description ?? "Cat post from Adam Makes Coffee."}
+>
+    <h1>{entry.data.title}</h1>
+    <Content />
+</BaseLayout>

@@ -1,0 +1,35 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const loadSoftware = async () => {
+    try {
+        return await getCollection("blog");
+    } catch {
+        return [];
+    }
+};
+
+const softwarePosts = await loadSoftware();
+---
+
+<BaseLayout
+    title="software"
+    description="Software projects, notes, and development updates."
+>
+    <section class="panel">
+        <h1>software</h1>
+        {softwarePosts.length === 0 ? (
+            <p>No software posts yet. Add one to start this section.</p>
+        ) : (
+            <ul class="updates-list">
+                {softwarePosts.map((post) => (
+                    <li class="update-item">
+                        <a href={`/software/${post.slug}`}>{post.data.title}</a>
+                        <p class="update-meta">{post.data.date.toLocaleDateString()}</p>
+                    </li>
+                ))}
+            </ul>
+        )}
+    </section>
+</BaseLayout>

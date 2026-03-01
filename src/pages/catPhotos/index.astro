@@ -1,0 +1,35 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const loadCats = async () => {
+    try {
+        return await getCollection("cats");
+    } catch {
+        return [];
+    }
+};
+
+const cats = await loadCats();
+---
+
+<BaseLayout
+    title="catPhotos"
+    description="Photos and updates featuring the cats."
+>
+    <section class="panel">
+        <h1>catPhotos</h1>
+        {cats.length === 0 ? (
+            <p>No cat posts yet. This page is ready whenever the cats are ready.</p>
+        ) : (
+            <ul class="updates-list">
+                {cats.map((cat) => (
+                    <li class="update-item">
+                        <a href={`/catPhotos/${cat.slug}`}>{cat.data.title}</a>
+                        <p class="update-meta">{cat.data.date.toLocaleDateString()}</p>
+                    </li>
+                ))}
+            </ul>
+        )}
+    </section>
+</BaseLayout>

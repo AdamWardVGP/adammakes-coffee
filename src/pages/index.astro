@@ -28,8 +28,8 @@ const updates = [...recipes, ...blog, ...cats]
 
 const entityBasePath: Record<string, string> = {
     recipes: "/recipes",
-    blog: "/blog",
-    cats: "/cats",
+    blog: "/software",
+    cats: "/catPhotos",
 };
 ---
 
@@ -37,24 +37,67 @@ const entityBasePath: Record<string, string> = {
     title="Home"
     description="Recent updates across recipes, blog posts, and cats."
 >
-    <section class="updates">
-        <h1>Recent Updates</h1>
-        {updates.length === 0 ? (
-            <p>No updates yet.</p>
-        ) : (
-            <ul class="updates-list">
-                {updates.map((update) => (
-                    <li class="update-item">
-                        <a href={`${entityBasePath[update.collection]}/${update.slug}`}>
-                            {update.title}
-                        </a>
-                        <p class="update-meta">
-                            {update.collection} · {update.date.toLocaleDateString()}
-                        </p>
-                        {update.description && <p>{update.description}</p>}
-                    </li>
-                ))}
-            </ul>
-        )}
+    <section class="portal-grid">
+        <aside>
+            <!--<article class="panel intro-card" id="coffee">-->
+            <!--    <h2>coffee</h2>-->
+            <!--    <p>-->
+            <!--        My home base. Notes, experiments, and rabbit holes.-->
+            <!--    </p>-->
+            <!--    <p class="tiny-note">Nothing polished. Everything useful.</p>-->
+            <!--</article>-->
+
+            <article class="panel">
+                <h2>Updates</h2>
+                {updates.length === 0 ? (
+                    <p>No updates yet.</p>
+                ) : (
+                    <ul class="updates-list">
+                        {updates.map((update) => (
+                            <li class="update-item">
+                                <a href={`${entityBasePath[update.collection]}/${update.slug}`}>
+                                    {update.title}
+                                </a>
+                                <p class="update-meta">
+                                    {update.collection} · {update.date.toLocaleDateString()}
+                                </p>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </article>
+        </aside>
+
+        <section class="panel">
+            <h2>Welcome</h2>
+            <p>
+                adammakes is my attempt to log my personal projects, weekend fun, and publish items that could be helpful for others. Not everything will be polishe, and actually almost everything is a work in progress.
+            </p>
+            <p>
+                But here it is, and I'm glad you stopped by!
+            </p>
+
+            <div class="pillars">
+                <article class="pillar" id="food">
+                    <h3>food</h3>
+                    <p>
+                        Recipe archive with edits, notes, and no 3 page life-story-scroll nonsense before finding the actual recipe.
+                        <a href="/recipes">Open recipes</a>.
+                    </p>
+                </article>
+                <article class="pillar" id="catPhotos">
+                    <h3>catPhotos</h3>
+                    <p>Ada and Izzy would love it if you came by and said hello!</p>
+                </article>
+                <article class="pillar" id="software">
+                    <h3>software</h3>
+                    <p>Build logs, experiments, and project updates.</p>
+                </article>
+                <article class="pillar">
+                    <h3>coffee</h3>
+                    <p>General updates, random finds and everything else.</p>
+                </article>
+            </div>
+        </section>
     </section>
 </BaseLayout>
