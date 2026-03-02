@@ -39,26 +39,6 @@ const entityBasePath: Record<string, string> = {
 >
     <section class="portal-grid">
         <aside>
-            <article class="panel">
-                <h2>Updates</h2>
-                {updates.length === 0 ? (
-                    <p>No updates yet.</p>
-                ) : (
-                    <ul class="updates-list">
-                        {updates.map((update) => (
-                            <li class="update-item">
-                                <a href={`${entityBasePath[update.collection]}/${update.slug}`}>
-                                    {update.title}
-                                </a>
-                                <p class="update-meta">
-                                    {update.collection} · {update.date.toLocaleDateString()}
-                                </p>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </article>
-
             <article class="panel retro-widget-panel">
                 <h2>Toybox</h2>
                 <div class="retro-widget">
@@ -178,35 +158,23 @@ const entityBasePath: Record<string, string> = {
                 But here it is, and I'm glad you stopped by!
             </p>
 
-            <div class="pillars">
-                <article class="pillar" id="food">
-                    <h3 class="pillar-heading">
-                        <span>food</span>
-                    </h3>
-                    <p>
-                        Recipe archive with edits, notes, and no 3 page life-story.
-                        <a href="/recipes">Open recipes</a>.
-                    </p>
-                </article>
-                <article class="pillar" id="catPhotos">
-                    <h3 class="pillar-heading">
-                        <span>catPhotos</span>
-                    </h3>
-                    <p>Ada and Izzy would love it if you came by and said hello!</p>
-                </article>
-                <article class="pillar" id="software">
-                    <h3 class="pillar-heading">
-                        <span>software</span>
-                    </h3>
-                    <p>Build logs, experiments, and project updates.</p>
-                </article>
-                <article class="pillar">
-                    <h3 class="pillar-heading">
-                        <span>coffee</span>
-                    </h3>
-                    <p>General updates, random finds and everything else.</p>
-                </article>
-            </div>
+            <h2>Site Updates</h2>
+            {updates.length === 0 ? (
+                <p>No updates yet.</p>
+            ) : (
+                <ul class="updates-list">
+                    {updates.map((update) => (
+                        <li class="update-item">
+                            <a href={`${entityBasePath[update.collection]}/${update.slug}`}>
+                                {update.title}
+                            </a>
+                            <p class="update-meta">
+                                {update.collection} · {update.date.toLocaleDateString()}
+                            </p>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </section>
     </section>
 
