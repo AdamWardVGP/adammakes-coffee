@@ -351,6 +351,10 @@ const entityBasePath: Record<string, string> = {
             const WANDER_STRENGTH = 0.012;
             const COLORS = ["#7fdbca", "#82AAFF", "#c5e478"];
 
+            const NUM_ASTEROIDS = 12;
+            const ASTEROID_AVOID_RADIUS = 55;
+            const ASTEROID_AVOID_STRENGTH = 1.4;
+
             let width, height, pageRect;
 
             const resize = () => {
@@ -374,6 +378,26 @@ const entityBasePath: Record<string, string> = {
                 color: COLORS[Math.floor(Math.random() * COLORS.length)],
                 wanderAngle: Math.random() * Math.PI * 2,
             }));
+
+            const makeVerts = (r, n) => Array.from({ length: n }, (_, i) => {
+                const a = (i / n) * Math.PI * 2;
+                const jitter = r * (0.65 + Math.random() * 0.5);
+                return [Math.cos(a) * jitter, Math.sin(a) * jitter];
+            });
+
+            const asteroids = Array.from({ length: NUM_ASTEROIDS }, () => {
+                const r = 9 + Math.random() * 11;
+                return {
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.55,
+                    vy: (Math.random() - 0.5) * 0.55,
+                    spin: (Math.random() - 0.5) * 0.018,
+                    angle: Math.random() * Math.PI * 2,
+                    radius: r,
+                    verts: makeVerts(r, 7 + Math.floor(Math.random() * 3)),
+                };
+            });
 
             const clamp = (vx, vy, max) => {
                 const spd = Math.hypot(vx, vy);
@@ -458,6 +482,18 @@ const entityBasePath: Record<string, string> = {
                 fx += rx;
                 fy += ry;
 
+                // Asteroid avoidance
+                for (const a of asteroids) {
+                    const dx = boid.x - a.x;
+                    const dy = boid.y - a.y;
+                    const d = Math.hypot(dx, dy);
+                    if (d < ASTEROID_AVOID_RADIUS && d > 0) {
+                        const strength = ASTEROID_AVOID_STRENGTH * (1 - d / ASTEROID_AVOID_RADIUS);
+                        fx += (dx / d) * strength;
+                        fy += (dy / d) * strength;
+                    }
+                }
+
                 // Wander: drift the boid's personal wander angle slightly each tick
                 boid.wanderAngle += (Math.random() - 0.5) * 0.4;
                 fx += Math.cos(boid.wanderAngle) * WANDER_STRENGTH;
@@ -507,8 +543,51 @@ const entityBasePath: Record<string, string> = {
                 ctx.restore();
             };
 
+            const tickAsteroid = (a) => {
+                a.angle += a.spin;
+                a.x += a.vx;
+                a.y += a.vy;
+                if (a.x < -20) a.x = width + 20;
+                if (a.x > width + 20) a.x = -20;
+                if (a.y < -20) a.y = height + 20;
+                if (a.y > height + 20) a.y = -20;
+            };
+
+            const drawAsteroid = (a) => {
+                ctx.save();
+                ctx.translate(a.x, a.y);
+                ctx.rotate(a.angle);
+
+                ctx.beginPath();
+                a.verts.forEach(([x, y], i) => {
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                });
+                ctx.closePath();
+
+                // Glow pass
+                ctx.strokeStyle = "#7a8fa8";
+                ctx.lineWidth = 3;
+                ctx.globalAlpha = 0.25;
+                ctx.shadowColor = "#7a8fa8";
+                ctx.shadowBlur = 10;
+                ctx.stroke();
+
+                // Crisp pass
+                ctx.lineWidth = 1.2;
+                ctx.globalAlpha = 0.7;
+                ctx.shadowBlur = 0;
+                ctx.stroke();
+
+                ctx.restore();
+            };
+
             const frame = () => {
                 ctx.clearRect(0, 0, width, height);
+                for (const a of asteroids) {
+                    tickAsteroid(a);
+                    drawAsteroid(a);
+                }
                 for (const boid of boids) {
                     tick(boid);
                     drawBoid(boid);
