@@ -351,11 +351,20 @@ const entityBasePath: Record<string, string> = {
             const WANDER_STRENGTH = 0.012;
             const COLORS = ["#7fdbca", "#82AAFF", "#c5e478"];
 
+            const NUM_STARS = 900;
+            const STAR_COLORS = [
+                "#ffffff", "#ffffff", "#ffffff", "#ffffff", // mostly white
+                "#b8d4ff", // cool blue-white
+                "#7fdbca", // cyan hint
+                "#c5e478", // green hint
+            ];
+            const STAR_GLYPHS = ["✦", "✧", "✶", "✴", "⋆", "+", "×", "*"];
+
             const NUM_ASTEROIDS = 12;
             const ASTEROID_AVOID_RADIUS = 55;
             const ASTEROID_AVOID_STRENGTH = 1.4;
 
-            let width, height, pageRect;
+            let width, height, pageRect, stars = [];
 
             const resize = () => {
                 width = canvas.width = window.innerWidth;
@@ -369,6 +378,23 @@ const entityBasePath: Record<string, string> = {
                 pageRect = shell ? shell.getBoundingClientRect() : null;
             }, { passive: true });
             resize();
+
+            const initStars = () => {
+                stars = Array.from({ length: NUM_STARS }, () => {
+                    const r = 0.1 + Math.random() * 0.38;
+                    return {
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        fontSize: Math.max(3, Math.round(r * 16)),
+                        alpha: 0.2 + Math.random() * 0.65,
+                        color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
+                        glyph: STAR_GLYPHS[Math.floor(Math.random() * STAR_GLYPHS.length)],
+                    };
+                });
+                // Sort by fontSize to minimise ctx.font reassignments
+                stars.sort((a, b) => a.fontSize - b.fontSize);
+            };
+            initStars();
 
             const boids = Array.from({ length: NUM_BOIDS }, () => ({
                 x: Math.random() * width,
@@ -582,8 +608,28 @@ const entityBasePath: Record<string, string> = {
                 ctx.restore();
             };
 
+            const drawStars = () => {
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.shadowBlur = 0;
+                let lastSize = -1;
+                for (const s of stars) {
+                    if (s.fontSize !== lastSize) {
+                        ctx.font = `${s.fontSize}px sans-serif`;
+                        lastSize = s.fontSize;
+                    }
+                    ctx.globalAlpha = s.alpha;
+                    ctx.fillStyle = s.color;
+                    ctx.fillText(s.glyph, s.x, s.y);
+                }
+                ctx.globalAlpha = 1;
+                ctx.textAlign = "start";
+                ctx.textBaseline = "alphabetic";
+            };
+
             const frame = () => {
                 ctx.clearRect(0, 0, width, height);
+                drawStars();
                 for (const a of asteroids) {
                     tickAsteroid(a);
                     drawAsteroid(a);
