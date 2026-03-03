@@ -69,7 +69,7 @@
 
 .tab-nav {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     background: var(--bg-tertiary);
     border-top: 1px solid var(--border);
 }

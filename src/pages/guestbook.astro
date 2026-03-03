@@ -1,0 +1,322 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+    title="guestbook"
+    description="Sign the guestbook."
+>
+    <div class="gb-shell">
+        <section class="panel">
+            <div class="terminal-counter">
+                <div class="terminal-titlebar">
+                    <span class="terminal-dot"></span>
+                    <span class="terminal-dot"></span>
+                    <span class="terminal-dot"></span>
+                    <span class="terminal-title">terminal — guestbook.log</span>
+                </div>
+                <div class="terminal-screen">
+
+                    <p class="terminal-line"><span class="prompt">$</span> cat guestbook.log</p>
+                    <p class="terminal-line dim">reading entries...</p>
+
+                    <div id="gb-entries" class="gb-entries" aria-live="polite">
+                        <p class="terminal-line dim">loading...</p>
+                    </div>
+
+                    <p class="terminal-line dim gb-divider">---</p>
+
+                    <p class="terminal-line"><span class="prompt">></span> <span class="tval cyan">// sign the guestbook. No account needed.</span></p>
+
+                    <form id="gb-form" class="gb-form" novalidate>
+                        <div class="gb-field">
+                            <label for="gb-handle" class="terminal-line">
+                                <span class="prompt">></span> handle<span class="tval cyan">:</span>
+                            </label>
+                            <input
+                                id="gb-handle"
+                                type="text"
+                                maxlength="32"
+                                placeholder="your name or alias"
+                                autocomplete="off"
+                                spellcheck="false"
+                            />
+                        </div>
+                        <div class="gb-field">
+                            <label for="gb-message" class="terminal-line">
+                                <span class="prompt">></span> message<span class="tval cyan">:</span>
+                            </label>
+                            <textarea
+                                id="gb-message"
+                                maxlength="280"
+                                placeholder="say hi (max 280 chars)"
+                                rows="3"
+                                spellcheck="false"
+                            ></textarea>
+                        </div>
+
+                        <p class="terminal-line gb-submit-line">
+                            <span class="prompt">adam@makescoffee:~$</span>
+                            <button type="submit" id="gb-submit" class="gb-submit-btn">send</button>
+                            <span class="blink-cursor" aria-hidden="true">&#x2588;</span>
+                        </p>
+                        <p id="gb-status" class="terminal-line dim gb-status" aria-live="polite"></p>
+                    </form>
+
+                </div>
+            </div>
+        </section>
+    </div>
+</BaseLayout>
+
+<script is:inline>
+    (() => {
+        const SUPABASE_URL = "https://vccaywqqehnttlfxozvz.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_2jqlAiR_WCbai36xXS8idw_0-_mMOkz";
+        const ENDPOINT = `${SUPABASE_URL}/rest/v1/guestbook_entries`;
+
+        const baseHeaders = {
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+            "Content-Type": "application/json",
+        };
+
+        const entriesEl = document.getElementById("gb-entries");
+        const form = document.getElementById("gb-form");
+        const handleInput = document.getElementById("gb-handle");
+        const messageInput = document.getElementById("gb-message");
+        const submitBtn = document.getElementById("gb-submit");
+        const statusEl = document.getElementById("gb-status");
+
+        const formatDate = (iso) => new Date(iso).toLocaleDateString("en-US", {
+            year: "numeric", month: "short", day: "numeric",
+        });
+
+        const renderEntries = (entries) => {
+            entriesEl.innerHTML = "";
+            if (!entries.length) {
+                const p = document.createElement("span");
+                p.className = "gb-empty";
+                p.textContent = "no entries yet. be the first.";
+                entriesEl.appendChild(p);
+                return;
+            }
+            for (const entry of entries) {
+                const date = document.createElement("span");
+                date.className = "gb-irc-date";
+                date.textContent = formatDate(entry.created_at);
+
+                const handle = document.createElement("span");
+                handle.className = "gb-irc-handle";
+                handle.textContent = "@" + entry.handle;
+
+                const pipe = document.createElement("span");
+                pipe.className = "gb-irc-pipe";
+                pipe.textContent = "|";
+
+                const msg = document.createElement("span");
+                msg.className = "gb-irc-msg";
+                msg.textContent = entry.message;
+
+                entriesEl.append(date, handle, pipe, msg);
+            }
+        };
+
+        const loadEntries = async () => {
+            try {
+                const res = await fetch(
+                    `${ENDPOINT}?order=created_at.desc&limit=100`,
+                    { headers: baseHeaders }
+                );
+                if (!res.ok) throw new Error();
+                renderEntries(await res.json());
+            } catch {
+                entriesEl.innerHTML = "";
+                const p = document.createElement("p");
+                p.className = "terminal-line dim";
+                p.textContent = "could not load entries.";
+                entriesEl.appendChild(p);
+            }
+        };
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const handle = handleInput.value.trim();
+            const message = messageInput.value.trim();
+
+            if (!handle || !message) {
+                statusEl.textContent = "handle and message are both required.";
+                return;
+            }
+
+            submitBtn.disabled = true;
+            statusEl.textContent = "sending...";
+
+            try {
+                const res = await fetch(ENDPOINT, {
+                    method: "POST",
+                    headers: { ...baseHeaders, "Prefer": "return=minimal" },
+                    body: JSON.stringify({ handle, message }),
+                });
+                if (!res.ok) throw new Error();
+                statusEl.textContent = "entry logged. thanks for stopping by.";
+                handleInput.value = "";
+                messageInput.value = "";
+                await loadEntries();
+            } catch {
+                statusEl.textContent = "something went wrong. try again.";
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+
+        loadEntries();
+    })();
+</script>
+
+<style is:global>
+.gb-shell {
+    display: grid;
+    gap: 1rem;
+}
+
+/* ══ entries ══ */
+
+.gb-entries {
+    margin: 0.25rem 0 0.5rem;
+}
+
+.gb-entry {
+    margin-top: 0.75rem;
+}
+
+/* ══ WeeChat-style entry grid ══ */
+
+.gb-entries {
+    display: grid;
+    grid-template-columns: max-content max-content max-content 1fr;
+    align-items: baseline;
+    column-gap: 0.6em;
+    row-gap: 0.35rem;
+    margin: 0.5rem 0;
+    font-family: "Courier New", monospace;
+    font-size: 0.82rem;
+}
+
+.gb-empty {
+    grid-column: 1 / -1;
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+.gb-irc-date {
+    color: var(--text-secondary);
+    opacity: 0.65;
+    font-size: 0.78rem;
+    white-space: nowrap;
+    padding-right: 0.8em;
+}
+
+.gb-divider {
+    margin: 0.75rem 0 0.5rem !important;
+}
+
+.gb-irc-handle {
+    text-align: right;
+    color: var(--accent-orange);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.gb-irc-pipe {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 6px rgba(127, 219, 202, 0.5);
+}
+
+.gb-irc-msg {
+    color: var(--text-primary);
+    word-break: break-word;
+    min-width: 0;
+}
+
+/* ══ form ══ */
+
+.gb-form {
+    margin-top: 0.5rem;
+}
+
+.gb-field {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+}
+
+.gb-field label {
+    flex-shrink: 0;
+    margin: 0;
+    padding-top: 0.3rem;
+}
+
+.gb-field input,
+.gb-field textarea {
+    flex: 1;
+    background: rgba(1, 22, 39, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-family: "Courier New", monospace;
+    font-size: 0.82rem;
+    padding: 0.3rem 0.5rem;
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.15s;
+}
+
+.gb-field input:focus,
+.gb-field textarea:focus {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 2px rgba(127, 219, 202, 0.12);
+}
+
+.gb-field input::placeholder,
+.gb-field textarea::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.55;
+}
+
+/* ══ submit line ══ */
+
+.gb-submit-line {
+    margin-top: 0.75rem !important;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.gb-submit-btn {
+    background: none;
+    border: none;
+    color: var(--accent-cyan);
+    font-family: "Courier New", monospace;
+    font-size: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.gb-submit-btn:hover {
+    color: var(--text-bright);
+}
+
+.gb-submit-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.gb-status {
+    margin-top: 0.4rem !important;
+}
+</style>
