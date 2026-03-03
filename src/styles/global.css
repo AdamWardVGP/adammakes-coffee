@@ -5,6 +5,7 @@
 .site-shell {
     max-width: 1024px;
     margin: 1.2rem auto;
+    min-height: calc(100vh - 2.4rem);
     border: 1px solid var(--border);
     border-radius: 16px;
     background: linear-gradient(180deg, var(--bg-secondary), var(--bg-primary));
@@ -68,7 +69,7 @@
 
 .tab-nav {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     background: var(--bg-tertiary);
     border-top: 1px solid var(--border);
 }
