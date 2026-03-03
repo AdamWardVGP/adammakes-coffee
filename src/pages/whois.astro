@@ -14,7 +14,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     <span class="terminal-dot"></span>
                     <span class="terminal-dot"></span>
                     <span class="terminal-dot"></span>
-                    <span class="terminal-title">terminal</span>
+                    <span class="terminal-title">terminal — whois adam</span>
                 </div>
                 <div class="terminal-screen">
 
@@ -34,17 +34,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         </div>
                     </figure>
 
-                    <p class="terminal-line"><span class="prompt">$</span> whois adam</p>
+                    <p class="terminal-line"><span class="prompt">coffee$</span> whois adam</p>
                     <p class="terminal-line dim">querying registry...</p>
                     <p></p><p></p>
-                    <p class="terminal-line"><span class="prompt">></span> Handle: <span class="tval cyan">Adam</span></p>
-                    <p class="terminal-line"><span class="prompt">></span> Role: <span class="tval green">gamer / cat dad / software engineer / hungry</span></p>
-                    <p class="terminal-line"><span class="prompt">></span> Status: <span class="tval yellow">online, probably debugging something</span></p>
+                    <p class="terminal-line"><span class="prompt"></span> Handle: <span class="tval cyan">Adam</span></p>
+                    <p class="terminal-line"><span class="prompt"></span> Role: <span class="tval green">gamer / cat dad / software engineerau</span></p>
+                    <p class="terminal-line"><span class="prompt"></span> Status: <span class="tval yellow">online, probably debugging something</span></p>
                     <p class="terminal-line dim">---</p>
                     <p class="terminal-line dim">Record last updated: just today and never again.</p>
                     <p class="terminal-line dim">---</p>
 
-                    <p class="terminal-line"><span class="prompt">></span> <span class="tval cyan">// about</span></p>
+                    <p class="terminal-line"><span class="prompt"></span> <span class="tval cyan">// about</span></p>
                     <p class="terminal-output">I'm Adam. I make coffee, play games, write software, cook food, and share space with my partner and two incredible cats who can jump through hoops but still can't understand that I don't want them on my keyboard.</p>
                     <p class="terminal-output">This site is <em>not</em> a portfolio. It's not optimized for LinkedIn. It has no cookie consent modal, no newsletter popup, no "We value your privacy" banner that values nothing. It's just a website.</p>
                     <p class="terminal-output">The web peaked somewhere around 2005&ndash;2009. We had weird personal sites, RSS feeds, web rings and forums where people were creativity was rampant and we found each other through community, not algorithms. Then everything turned into a walled garden with ads, a subscription tier, an app (sorry my fault), a "platform", and it just wasn't as fun as it used to be.</p>
@@ -52,12 +52,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
                     <p class="terminal-line dim">---</p>
 
-                    <p class="terminal-line"><span class="prompt">></span> <span class="tval cyan">// elsewhere</span></p>
+                    <p class="terminal-line"><span class="prompt"></span> <span class="tval cyan">// elsewhere</span></p>
                     <p class="terminal-output">I'm on the internet in a few places. Reluctantly.</p>
-                    <p class="terminal-line terminal-link-line"><span class="prompt">></span> <a href="https://github.com/AdamWardVGP" target="_blank" rel="noopener noreferrer">GitHub</a> &mdash; where my actual code lives</p>
+                    <p class="terminal-line terminal-link-line"><span class="prompt"></span> <a href="https://github.com/AdamWardVGP" target="_blank" rel="noopener noreferrer">GitHub</a> &mdash; where my actual code lives</p>
+
+                    <p class="terminal-line dim">---</p>
 
                     <p class="terminal-line terminal-prompt-line">
-                        <span class="prompt">adam@makescoffee:~$</span>
+                        <span class="prompt">adam@coffee:~$</span>
                         <span class="blink-cursor" aria-hidden="true">&#x2588;</span>
                     </p>
 
@@ -228,6 +230,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     margin-top: 0.4rem !important;
 }
 
+.terminal-link-line a {
+    color: var(--accent-cyan);
+    font-family: "Courier New", monospace;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.terminal-link-line a:hover {
+    color: var(--text-bright);
+}
+
 /* ══ blinking cursor ══ */
 
 .terminal-prompt-line {
@@ -235,19 +249,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     margin-top: 0.85rem !important;
 }
 
-.blink-cursor {
-    display: inline-block;
-    color: var(--accent-cyan);
-    text-shadow: 0 0 8px rgba(127, 219, 202, 0.8);
-    animation: cursor-blink 1.1s step-end infinite;
-    margin-left: 0.2em;
-    font-family: "Courier New", monospace;
-}
-
-@keyframes cursor-blink {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0; }
-}
 
 /* ══ stack ══ */
 

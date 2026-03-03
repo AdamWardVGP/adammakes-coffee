@@ -17,7 +17,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 </div>
                 <div class="terminal-screen">
 
-                    <p class="terminal-line"><span class="prompt">$</span> cat guestbook.log</p>
+                    <p class="terminal-line"><span class="prompt">coffee$</span> cat guestbook.log</p>
                     <p class="terminal-line dim">reading entries...</p>
 
                     <div id="gb-entries" class="gb-entries" aria-live="polite">
@@ -26,12 +26,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
                     <p class="terminal-line dim gb-divider">---</p>
 
-                    <p class="terminal-line"><span class="prompt">></span> <span class="tval cyan">// sign the guestbook. No account needed.</span></p>
+                    <p class="terminal-line"><span class="prompt"></span> <span class="tval cyan">// sign the guestbook. No account needed.</span></p>
 
                     <form id="gb-form" class="gb-form" novalidate>
                         <div class="gb-field">
                             <label for="gb-handle" class="terminal-line">
-                                <span class="prompt">></span> handle<span class="tval cyan">:</span>
+                                <span class="prompt"></span> handle<span class="tval cyan">:</span>
                             </label>
                             <input
                                 id="gb-handle"
@@ -44,7 +44,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         </div>
                         <div class="gb-field">
                             <label for="gb-message" class="terminal-line">
-                                <span class="prompt">></span> message<span class="tval cyan">:</span>
+                                <span class="prompt"></span> message<span class="tval cyan">:</span>
                             </label>
                             <textarea
                                 id="gb-message"
@@ -56,7 +56,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         </div>
 
                         <p class="terminal-line gb-submit-line">
-                            <span class="prompt">adam@makescoffee:~$</span>
+                            <span class="prompt">adam@coffee:~$</span>
                             <button type="submit" id="gb-submit" class="gb-submit-btn">send</button>
                             <span class="blink-cursor" aria-hidden="true">&#x2588;</span>
                         </p>

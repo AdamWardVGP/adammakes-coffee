@@ -735,6 +735,22 @@ body::after {
     z-index: 5;
 }
 
+/* ══ blinking terminal cursor ══ */
+
+.blink-cursor {
+    display: inline-block;
+    color: var(--accent-cyan);
+    text-shadow: 0 0 8px rgba(127, 219, 202, 0.8);
+    animation: cursor-blink 1.1s step-end infinite;
+    margin-left: 0.2em;
+    font-family: "Courier New", monospace;
+}
+
+@keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
 body.binary-cursor-enabled,
 body.binary-cursor-enabled * {
     cursor: none !important;
