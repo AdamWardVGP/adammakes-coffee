@@ -176,6 +176,12 @@
     text-transform: capitalize;
 }
 
+.update-desc {
+    margin: 0.3rem 0 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
 .pillars {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -961,6 +967,14 @@ textarea::placeholder {
 
     .portal-grid {
         grid-template-columns: 1fr;
+    }
+
+    .portal-grid aside {
+        order: 2;
+    }
+
+    .portal-grid > section {
+        order: 1;
     }
 
     .pillars {

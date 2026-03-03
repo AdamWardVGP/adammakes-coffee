@@ -172,6 +172,9 @@ const entityBasePath: Record<string, string> = {
                             <p class="update-meta">
                                 {update.collection} · {update.date.toLocaleDateString()}
                             </p>
+                            {update.description && (
+                                <p class="update-desc">{update.description}</p>
+                            )}
                         </li>
                     ))}
                 </ul>
