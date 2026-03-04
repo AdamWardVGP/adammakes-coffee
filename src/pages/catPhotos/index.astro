@@ -29,11 +29,50 @@ const missions = await loadMissions();
             <h1 class="dossier-title typewriter">field agent dossiers</h1>
             <p class="dossier-subtitle typewriter">operation: CATS — continuous surveillance programme</p>
             <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+            <div class="header-rule"></div>
+
         </div>
 
         <!-- ══ PASSPORTS ══ -->
         <div class="passports-section">
-            <div class="section-tab typewriter">personnel files</div>
+            <div class="section-tab typewriter">purrsonnel files</div>
             <div class="passports-paper">
                 <div class="passports-grid">
 
@@ -116,6 +155,27 @@ const missions = await loadMissions();
                     </div>
 
                 </div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+                <div class="header-rule"></div>
+
             </div>
         </div>
 
@@ -126,10 +186,29 @@ const missions = await loadMissions();
             {missions.length === 0 ? (
                 <div class="mission-report">
                     <p class="typewriter mission-empty">No field reports on file. Surveillance ongoing.</p>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>        <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
+                    <div class="header-rule"></div>
                 </div>
             ) : (
                 missions.map((mission, i) => (
-                    <div class="mission-report">
+                    <div class="mission-report" style={`--rot: ${i % 2 === 0 ? '-0.5deg' : '0.7deg'}`}>
                         <div class="mission-header">
                             <span class="mission-number typewriter">report #{String(missions.length - i).padStart(3, "0")}</span>
                             <span class="mission-date typewriter">
@@ -154,6 +233,7 @@ const missions = await loadMissions();
                             <p class="mission-text typewriter">{mission.data.description}</p>
                         )}
                     </div>
+
                 ))
             )}
         </div>
@@ -167,6 +247,8 @@ const missions = await loadMissions();
     flex-direction: column;
     gap: 0;
     font-family: "Courier New", monospace;
+    padding: 0.5rem 0 3rem;
+    overflow: visible;
 }
 
 .typewriter {
@@ -193,9 +275,14 @@ const missions = await loadMissions();
         rgba(139, 90, 43, 0.07) 23px, rgba(139, 90, 43, 0.07) 24px
     );
     border: 1px solid #c9b882;
-    border-bottom: none;
-    border-radius: 6px 6px 0 0;
+    border-radius: 6px;
     padding: 1.1rem 1.25rem 0.85rem;
+    transform: rotate(-0.7deg);
+    transform-origin: top center;
+    box-shadow: 3px 8px 24px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(201, 184, 130, 0.2);
+    position: relative;
+    z-index: 1;
+    margin-bottom: -35rem;
 }
 
 .header-meta {
@@ -279,6 +366,11 @@ const missions = await loadMissions();
 
 .passports-section {
     margin-top: 0;
+    transform: rotate(1.0deg);
+    transform-origin: top center;
+    position: relative;
+    z-index: 2;
+    margin-bottom: -2.5rem;
 }
 
 .passports-paper {
@@ -290,6 +382,7 @@ const missions = await loadMissions();
     border: 1px solid #c9b882;
     border-radius: 0 6px 6px 6px;
     padding: 1.6rem 1.5rem 1.4rem;
+    box-shadow: 3px 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(201, 184, 130, 0.2);
 }
 
 .passports-grid {
@@ -452,7 +545,9 @@ const missions = await loadMissions();
 /* ══ missions ══ */
 
 .missions-section {
-    margin-top: 1.75rem;
+    margin-top: -18rem;
+    position: relative;
+    z-index: 3;
 }
 
 .mission-report {
@@ -464,7 +559,11 @@ const missions = await loadMissions();
     border: 1px solid #c9b882;
     border-radius: 0 6px 6px 6px;
     padding: 1.1rem 1.25rem 1.3rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    transform: rotate(var(--rot, 0deg));
+    transform-origin: top center;
+    box-shadow: 3px 8px 20px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(201, 184, 130, 0.2);
+    position: relative;
 }
 
 .mission-header {
