@@ -21,6 +21,10 @@ const cats = defineCollection({
         title: z.string(),
         date: z.date(),
         description: z.string().optional(),
+        photos: z.array(z.object({
+            src: z.string(),
+            caption: z.string().optional(),
+        })).optional(),
     }),
 });
 

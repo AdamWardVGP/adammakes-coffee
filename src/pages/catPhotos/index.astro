@@ -2,34 +2,554 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const loadCats = async () => {
+const loadMissions = async () => {
     try {
-        return await getCollection("cats");
+        const all = await getCollection("cats");
+        return all.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
     } catch {
         return [];
     }
 };
 
-const cats = await loadCats();
+const missions = await loadMissions();
 ---
 
 <BaseLayout
     title="catPhotos"
-    description="Photos and updates featuring the cats."
+    description="Field dossiers and mission reports. Subjects: Ada and Izzy."
 >
-    <section class="panel">
-        <h1>catPhotos</h1>
-        {cats.length === 0 ? (
-            <p>No cat posts yet. This page is ready whenever the cats are ready.</p>
-        ) : (
-            <ul class="updates-list">
-                {cats.map((cat) => (
-                    <li class="update-item">
-                        <a href={`/catPhotos/${cat.slug}`}>{cat.data.title}</a>
-                        <p class="update-meta">{cat.data.date.toLocaleDateString()}</p>
-                    </li>
-                ))}
-            </ul>
-        )}
-    </section>
+    <div class="dossier-shell">
+
+        <!-- ══ HEADER ══ -->
+        <div class="dossier-header">
+            <div class="header-meta">
+                <span class="stamp stamp-red">classified</span>
+                <span class="header-ref typewriter">ref: CAT-OPS // ongoing</span>
+            </div>
+            <h1 class="dossier-title typewriter">field agent dossiers</h1>
+            <p class="dossier-subtitle typewriter">operation: CATS — continuous surveillance programme</p>
+            <div class="header-rule"></div>
+        </div>
+
+        <!-- ══ PASSPORTS ══ -->
+        <div class="passports-section">
+            <div class="section-tab typewriter">personnel files</div>
+            <div class="passports-paper">
+                <div class="passports-grid">
+
+                    <!-- Ada -->
+                    <div class="passport">
+                        <div class="polaroid-wrap">
+                            <div class="paperclip" aria-hidden="true"></div>
+                            <div class="polaroid" style="--rot: -1.8deg">
+                                <img src="/cats/ada_the_fluff.jpg" alt="Ada" />
+                                <div class="polaroid-caption typewriter">subject: ada</div>
+                            </div>
+                        </div>
+                        <div class="passport-fields typewriter">
+                            <div class="field-row">
+                                <span class="field-label">designation</span>
+                                <span class="field-dots"></span>
+                                <span class="field-value">Ada</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">codename</span>
+                                <span class="field-dots"></span>
+                                <span class="field-value">"the fluff"</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">species</span>
+                                <span class="field-dots"></span>
+                                <span class="field-value">cat (confirmed)</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">status</span>
+                                <span class="field-dots"></span>
+                                <span class="field-value field-active">ACTIVE</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">clearance</span>
+                                <span class="field-dots"></span>
+                                <span class="field-value">keyboard: denied</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="passport-divider"></div>
+
+                    <!-- Izzy -->
+                    <div class="passport">
+                        <div class="polaroid-wrap">
+                            <div class="paperclip" aria-hidden="true"></div>
+                            <div class="polaroid" style="--rot: 1.4deg">
+                                <img src="/cats/izzy_the_noodle.jpg" alt="Izzy" />
+                                <div class="polaroid-caption typewriter">subject: izzy</div>
+                            </div>
+                        </div>
+                        <div class="passport-fields typewriter">
+                            <div class="field-row">
+                                <span class="field-label">designation</span>
+                                <span class="field-dots"></span>
+                                <span class="field-value">Izzy</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">codename</span>
+                                <span class="field-dots"></span>
+                                <span class="field-value">"the noodle"</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">species</span>
+                                <span class="field-dots"></span>
+                                <span class="field-value">cat (disputed)</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">status</span>
+                                <span class="field-dots"></span>
+                                <span class="field-value field-active">ACTIVE</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">clearance</span>
+                                <span class="field-dots"></span>
+                                <span class="field-value">cardboard box: approved</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ MISSION REPORTS ══ -->
+        <div class="missions-section">
+            <div class="section-tab typewriter">mission reports</div>
+
+            {missions.length === 0 ? (
+                <div class="mission-report">
+                    <p class="typewriter mission-empty">No field reports on file. Surveillance ongoing.</p>
+                </div>
+            ) : (
+                missions.map((mission, i) => (
+                    <div class="mission-report">
+                        <div class="mission-header">
+                            <span class="mission-number typewriter">report #{String(missions.length - i).padStart(3, "0")}</span>
+                            <span class="mission-date typewriter">
+                                {mission.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }).toUpperCase()}
+                            </span>
+                            <span class="stamp stamp-red stamp-sm">{mission.data.title}</span>
+                        </div>
+
+                        {mission.data.photos && mission.data.photos.length > 0 && (
+                            <div class="mission-photos">
+                                {mission.data.photos.slice(0, 8).map((photo, j) => (
+                                    <div class="polaroid mission-polaroid"
+                                         style={`--rot: ${j % 2 === 0 ? (0.5 + (j % 4) * 0.5) : -(0.7 + (j % 4) * 0.45)}deg`}>
+                                        <img src={photo.src} alt={photo.caption ?? `photo ${j + 1}`} />
+                                        {photo.caption && <div class="polaroid-caption typewriter">{photo.caption}</div>}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {mission.data.description && (
+                            <p class="mission-text typewriter">{mission.data.description}</p>
+                        )}
+                    </div>
+                ))
+            )}
+        </div>
+
+    </div>
 </BaseLayout>
+
+<style>
+.dossier-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    font-family: "Courier New", monospace;
+}
+
+.typewriter {
+    font-family: "Courier New", monospace;
+    color: #1c1008;
+}
+
+/* ══ paper texture ══ */
+
+.dossier-paper-bg {
+    background: #f0e6c6;
+    background-image: repeating-linear-gradient(
+        transparent 0px, transparent 23px,
+        rgba(139, 90, 43, 0.07) 23px, rgba(139, 90, 43, 0.07) 24px
+    );
+}
+
+/* ══ header ══ */
+
+.dossier-header {
+    background: #f0e6c6;
+    background-image: repeating-linear-gradient(
+        transparent 0px, transparent 23px,
+        rgba(139, 90, 43, 0.07) 23px, rgba(139, 90, 43, 0.07) 24px
+    );
+    border: 1px solid #c9b882;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    padding: 1.1rem 1.25rem 0.85rem;
+}
+
+.header-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.header-ref {
+    font-size: 0.68rem;
+    color: #5a3e1a;
+    opacity: 0.65;
+}
+
+.dossier-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1c1008;
+    margin: 0 0 0.2rem;
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+}
+
+.dossier-subtitle {
+    font-size: 0.7rem;
+    color: #5a3e1a;
+    margin: 0;
+    opacity: 0.7;
+}
+
+.header-rule {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(28,16,8,0.3) 0%, transparent 100%);
+    margin-top: 0.85rem;
+}
+
+/* ══ stamp ══ */
+
+.stamp {
+    display: inline-block;
+    font-family: "Courier New", monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #8b1a1a;
+    border: 2px solid #8b1a1a;
+    padding: 0.12em 0.5em;
+    transform: rotate(-2.5deg);
+    opacity: 0.8;
+    flex-shrink: 0;
+}
+
+.stamp-sm {
+    font-size: 0.58rem;
+    border-width: 1.5px;
+    transform: rotate(-1.2deg);
+}
+
+/* ══ section tab ══ */
+
+.section-tab {
+    display: inline-block;
+    background: #c4a24a;
+    color: #1c1008;
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.22em 0.85em;
+    border-radius: 4px 4px 0 0;
+    border: 1px solid #a88630;
+    border-bottom: none;
+    margin-bottom: -1px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ══ passports ══ */
+
+.passports-section {
+    margin-top: 0;
+}
+
+.passports-paper {
+    background: #f0e6c6;
+    background-image: repeating-linear-gradient(
+        transparent 0px, transparent 23px,
+        rgba(139, 90, 43, 0.07) 23px, rgba(139, 90, 43, 0.07) 24px
+    );
+    border: 1px solid #c9b882;
+    border-radius: 0 6px 6px 6px;
+    padding: 1.6rem 1.5rem 1.4rem;
+}
+
+.passports-grid {
+    display: flex;
+    gap: 2.5rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.passport {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+}
+
+.passport-divider {
+    width: 1px;
+    align-self: stretch;
+    flex-shrink: 0;
+    background: repeating-linear-gradient(
+        to bottom, rgba(28,16,8,0.2) 0px, rgba(28,16,8,0.2) 4px,
+        transparent 4px, transparent 8px
+    );
+}
+
+/* ══ polaroid ══ */
+
+.polaroid-wrap {
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    margin-top: 22px;
+}
+
+.polaroid {
+    background: #fff;
+    padding: 6px 6px 36px;
+    box-shadow: 2px 3px 10px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.05);
+    display: block;
+    transform: rotate(var(--rot, 0deg));
+}
+
+.polaroid img {
+    display: block;
+    width: 130px;
+    height: 145px;
+    object-fit: cover;
+    object-position: center top;
+    /* faded, warm, slightly overexposed — classic polaroid */
+    filter: contrast(0.86) saturate(0.82) brightness(0.9) sepia(0.22) hue-rotate(-8deg);
+}
+
+/* vignette + warm light-leak overlay */
+.polaroid::before {
+    content: "";
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    bottom: 36px;
+    background:
+        radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.28) 100%),
+        radial-gradient(ellipse at 5% 95%, rgba(255, 190, 80, 0.14) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 2;
+    mix-blend-mode: multiply;
+}
+
+.polaroid-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.58rem;
+    color: #3a2208;
+    text-align: center;
+    padding: 0 4px;
+}
+
+/* ══ paperclip ══ */
+
+.paperclip {
+    position: absolute;
+    top: -22px;
+    left: 18px;
+    width: 15px;
+    height: 46px;
+    border: 3.5px solid #b8b8b8;
+    border-radius: 8px 8px 0 0;
+    border-bottom: none;
+    z-index: 2;
+    box-shadow: 1px 1px 0 rgba(255,255,255,0.7);
+}
+
+.paperclip::after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 2.5px;
+    width: 6px;
+    height: 28px;
+    border: 3px solid #b8b8b8;
+    border-radius: 5px 5px 0 0;
+    border-bottom: none;
+}
+
+/* ══ passport fields ══ */
+
+.passport-fields {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding-top: 0.5rem;
+}
+
+.field-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid rgba(28, 16, 8, 0.1);
+}
+
+.field-label {
+    flex-shrink: 0;
+    color: #5a3e1a;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.7;
+    min-width: 5rem;
+}
+
+.field-dots {
+    flex: 1;
+    border-bottom: 1px dotted rgba(28, 16, 8, 0.2);
+    margin-bottom: 2px;
+    min-width: 0.5rem;
+}
+
+.field-value {
+    flex-shrink: 0;
+    color: #1c1008;
+    font-weight: 600;
+}
+
+.field-active {
+    color: #1a6b1a;
+    letter-spacing: 0.06em;
+}
+
+/* ══ missions ══ */
+
+.missions-section {
+    margin-top: 1.75rem;
+}
+
+.mission-report {
+    background: #f0e6c6;
+    background-image: repeating-linear-gradient(
+        transparent 0px, transparent 23px,
+        rgba(139, 90, 43, 0.07) 23px, rgba(139, 90, 43, 0.07) 24px
+    );
+    border: 1px solid #c9b882;
+    border-radius: 0 6px 6px 6px;
+    padding: 1.1rem 1.25rem 1.3rem;
+    margin-bottom: 1.5rem;
+}
+
+.mission-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid rgba(28, 16, 8, 0.15);
+}
+
+.mission-number {
+    font-size: 0.62rem;
+    color: #5a3e1a;
+    opacity: 0.65;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.mission-date {
+    font-size: 0.68rem;
+    color: #1c1008;
+    letter-spacing: 0.04em;
+}
+
+.mission-photos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.25rem 0 0.5rem;
+}
+
+.mission-polaroid {
+    transform: rotate(var(--rot, 0deg));
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mission-polaroid .polaroid-caption {
+    font-size: 0.55rem;
+}
+
+.mission-polaroid:hover {
+    transform: rotate(0deg) scale(1.05);
+    box-shadow: 4px 6px 18px rgba(0,0,0,0.28);
+    position: relative;
+    z-index: 10;
+}
+
+.mission-text {
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: #1c1008;
+    margin: 0.5rem 0 0;
+    max-width: 70ch;
+}
+
+.mission-empty {
+    font-size: 0.78rem;
+    color: #5a3e1a;
+    opacity: 0.6;
+    margin: 0;
+}
+
+/* ══ responsive ══ */
+
+@media (max-width: 600px) {
+    .passports-grid {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .passport {
+        flex-direction: column;
+    }
+    .passport-divider {
+        width: 100%;
+        height: 1px;
+        background: repeating-linear-gradient(
+            to right, rgba(28,16,8,0.2) 0px, rgba(28,16,8,0.2) 4px,
+            transparent 4px, transparent 8px
+        );
+    }
+    .mission-photos {
+        gap: 0.75rem;
+    }
+}
+</style>
