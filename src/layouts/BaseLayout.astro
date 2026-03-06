@@ -81,7 +81,6 @@ const currentPath = Astro.url.pathname;
     </main>
 </div>
 <canvas id="boids-canvas" aria-hidden="true"></canvas>
-<div id="binary-trail" aria-hidden="true"></div>
 <div id="binary-cursor" aria-hidden="true">
     <svg viewBox="0 0 48 64" xmlns="http://www.w3.org/2000/svg" role="presentation">
         <defs>
@@ -112,50 +111,15 @@ const currentPath = Astro.url.pathname;
         const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         if (isCoarsePointer || reduceMotion) return;
 
-        const trail = document.getElementById("binary-trail");
         const cursor = document.getElementById("binary-cursor");
-        if (!trail || !cursor) return;
+        if (!cursor) return;
 
         document.body.classList.add("binary-cursor-enabled");
 
-        let lastSpawn = 0;
-        let bitCount = 0;
-        const maxBits = 40;
-        const classes = ["cyan", "blue", "green"];
-
         window.addEventListener("pointermove", (event) => {
-            const now = performance.now();
-            if (now - lastSpawn < 28) return;
-            lastSpawn = now;
-
             cursor.style.left = `${event.clientX}px`;
             cursor.style.top = `${event.clientY}px`;
             cursor.style.opacity = "1";
-
-            const bit = document.createElement("span");
-            bit.className = `binary-bit ${classes[Math.floor(Math.random() * classes.length)]}`;
-            bit.textContent = Math.random() > 0.5 ? "1" : "0";
-
-            const jitterX = (Math.random() - 0.5) * 14;
-            const jitterY = (Math.random() - 0.5) * 14;
-            bit.style.left = `${event.clientX + jitterX}px`;
-            bit.style.top = `${event.clientY + jitterY}px`;
-
-            trail.appendChild(bit);
-            bitCount += 1;
-
-            bit.addEventListener("animationend", () => {
-                bit.remove();
-                bitCount = Math.max(0, bitCount - 1);
-            });
-
-            if (bitCount > maxBits) {
-                const first = trail.firstElementChild;
-                if (first) {
-                    first.remove();
-                    bitCount -= 1;
-                }
-            }
         });
 
         window.addEventListener("pointerdown", () => {

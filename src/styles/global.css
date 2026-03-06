@@ -728,13 +728,6 @@ body::after {
     z-index: 1;
 }
 
-#binary-trail {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 5;
-}
-
 /* ══ blinking terminal cursor ══ */
 
 .blink-cursor {
@@ -793,41 +786,6 @@ body.binary-cursor-enabled * {
     }
 }
 
-.binary-bit {
-    position: fixed;
-    font-family: "Courier New", monospace;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 1;
-    opacity: 0.95;
-    transform: translate(-50%, -50%);
-    animation: binary-fade 850ms ease-out forwards;
-    text-shadow: 0 0 10px currentColor;
-    user-select: none;
-}
-
-.binary-bit.cyan {
-    color: var(--accent-cyan);
-}
-
-.binary-bit.blue {
-    color: var(--accent-blue);
-}
-
-.binary-bit.green {
-    color: var(--accent-green);
-}
-
-@keyframes binary-fade {
-    0% {
-        opacity: 0.95;
-        transform: translate(-50%, -50%) scale(1);
-    }
-    100% {
-        opacity: 0;
-        transform: translate(-50%, -80%) scale(0.85);
-    }
-}
 
 ::selection {
     background: var(--selection);
@@ -1000,11 +958,6 @@ textarea::placeholder {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .binary-bit {
-        animation: none;
-        opacity: 0;
-    }
-
     #binary-cursor {
         display: none;
     }
