@@ -34,31 +34,32 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         </div>
                     </figure>
 
-                    <p class="terminal-line"><span class="prompt">coffee$</span> whois adam</p>
-                    <p class="terminal-line dim">querying registry...</p>
-                    <p></p><p></p>
-                    <p class="terminal-line"><span class="prompt"></span> Handle: <span class="tval cyan">Adam</span></p>
-                    <p class="terminal-line"><span class="prompt"></span> Role: <span class="tval green">gamer / cat dad / software engineer</span></p>
-                    <p class="terminal-line"><span class="prompt"></span> Status: <span class="tval yellow">online, probably debugging something</span></p>
-                    <p class="terminal-line dim">---</p>
-                    <p class="terminal-line dim">Record last updated: just today and never again.</p>
-                    <p class="terminal-line dim">---</p>
+                    <p class="terminal-line" data-tw="type" data-tw-speed="22"><span class="prompt">coffee$</span> whois adam</p>
+                    <p class="terminal-line dim" id="tw-query-line" data-tw="type" data-tw-speed="62" data-tw-delay="200">querying registry...</p>
+                    <p data-tw="show" data-tw-delay="420"></p>
+                    <p data-tw="show"></p>
+                    <p class="terminal-line" data-tw="type" data-tw-speed="28"><span class="prompt"></span> Handle: <span class="tval cyan">Adam</span></p>
+                    <p class="terminal-line" data-tw="type" data-tw-speed="22" data-tw-delay="180"><span class="prompt"></span> Role: <span class="tval green">gamer / cat dad / software engineer</span></p>
+                    <p class="terminal-line" data-tw="type" data-tw-speed="22" data-tw-delay="180"><span class="prompt"></span> Status: <span class="tval yellow">online, probably debugging something</span></p>
+                    <p class="terminal-line dim" data-tw="show" data-tw-delay="260">---</p>
+                    <p class="terminal-line dim" data-tw="type" data-tw-speed="18" data-tw-delay="60">Record last updated: just today and never again.</p>
+                    <p class="terminal-line dim" data-tw="show" data-tw-delay="100">---</p>
 
-                    <p class="terminal-line"><span class="prompt"></span> <span class="tval cyan">// about</span></p>
-                    <p class="terminal-output">I'm Adam. I make coffee, play games, write software, cook food, and share space with my partner and two incredible cats who can jump through hoops but still can't understand that I don't want them on my keyboard.</p>
-                    <p class="terminal-output">This site is <em>not</em> a portfolio. It's not optimized for LinkedIn. It has no cookie consent modal, no newsletter popup, no "We value your privacy" banner that values nothing. It's just a website.</p>
-                    <p class="terminal-output">The web peaked somewhere around 2005&ndash;2009. We had weird personal sites, RSS feeds, web rings and forums where people were chill, creativity was rampant, and we found each other through happenstance not algorithms. Then everything turned into a walled garden with ads, a subscription tier, an app (sorry my fault), a "platform", and it just wasn't as fun as it used to be.</p>
-                    <p class="terminal-output">Here I am, back where I started with HTML, CSS and some markdown. RIP flash.</p>
+                    <p class="terminal-line" data-tw="type" data-tw-speed="24" data-tw-delay="320"><span class="prompt"></span> <span class="tval cyan">// about</span></p>
+                    <p class="terminal-output" data-tw="type" data-tw-speed="7" data-tw-delay="140">I'm Adam. I make coffee, play games, write software, cook food, and share space with my partner and two incredible cats who can jump through hoops but still can't understand that I don't want them on my keyboard.</p>
+                    <p class="terminal-output" data-tw="type" data-tw-speed="7" data-tw-delay="200">This site is <em>not</em> a portfolio. It's not optimized for LinkedIn. It has no cookie consent modal, no newsletter popup, no "We value your privacy" banner that values nothing. It's just a website.</p>
+                    <p class="terminal-output" data-tw="type" data-tw-speed="7" data-tw-delay="200">The web peaked somewhere around 2005&ndash;2009. We had weird personal sites, RSS feeds, web rings and forums where people were chill, creativity was rampant, and we found each other through happenstance not algorithms. Then everything turned into a walled garden with ads, a subscription tier, an app (sorry my fault), a "platform", and it just wasn't as fun as it used to be.</p>
+                    <p class="terminal-output" data-tw="type" data-tw-speed="7" data-tw-delay="200">Here I am, back where I started with HTML, CSS and some markdown. RIP flash.</p>
 
-                    <p class="terminal-line dim">---</p>
+                    <p class="terminal-line dim" data-tw="show" data-tw-delay="320">---</p>
 
-                    <p class="terminal-line"><span class="prompt"></span> <span class="tval cyan">// elsewhere</span></p>
-                    <p class="terminal-output">I'm on the internet in a few places. Reluctantly.</p>
-                    <p class="terminal-line terminal-link-line"><span class="prompt"></span> <a href="https://github.com/AdamWardVGP" target="_blank" rel="noopener noreferrer">GitHub</a> - where my actual code lives</p>
+                    <p class="terminal-line" data-tw="type" data-tw-speed="24" data-tw-delay="220"><span class="prompt"></span> <span class="tval cyan">// elsewhere</span></p>
+                    <p class="terminal-output" data-tw="type" data-tw-speed="10" data-tw-delay="140">I'm on the internet in a few places. Reluctantly.</p>
+                    <p class="terminal-line terminal-link-line" data-tw="type" data-tw-speed="18" data-tw-delay="100"><span class="prompt"></span> <a href="https://github.com/AdamWardVGP" target="_blank" rel="noopener noreferrer">GitHub</a> - where my actual code lives</p>
 
-                    <p class="terminal-line dim">---</p>
+                    <p class="terminal-line dim" data-tw="show" data-tw-delay="320">---</p>
 
-                    <p class="terminal-line terminal-prompt-line">
+                    <p class="terminal-line terminal-prompt-line" data-tw="show" data-tw-delay="420">
                         <span class="prompt">adam@coffee:~$</span>
                         <span class="blink-cursor" aria-hidden="true">&#x2588;</span>
                     </p>
@@ -159,6 +160,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     animation: crt-flicker 10s infinite;
 }
 
+
 .crt-photo-wrap::before {
     content: "";
     position: absolute;
@@ -240,6 +242,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 .terminal-link-line a:hover {
     color: var(--text-bright);
+}
+
+/* ══ typewriter — hide until revealed by JS ══ */
+
+[data-tw] { display: none; }
+
+/* ══ fixed-height terminal that fills up ══ */
+
+.terminal-screen {
+    height: 660px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
 }
 
 /* ══ blinking cursor ══ */
@@ -328,6 +342,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 /* ══ responsive ══ */
 
+@media (prefers-reduced-motion: reduce) {
+    [data-tw] { display: revert; }
+}
+
 @media (max-width: 600px) {
     .crt-frame {
         float: none;
@@ -347,3 +365,89 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     .stack-grid { grid-template-columns: 1fr; }
 }
 </style>
+
+<script is:inline>
+(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const screen = document.querySelector('.terminal-screen');
+
+    // ── Typing cursor ───────────────────────────────────────────────────────
+    const typeCursor = document.createElement('span');
+    typeCursor.className = 'blink-cursor';
+    typeCursor.setAttribute('aria-hidden', 'true');
+    typeCursor.textContent = '█';
+
+    // ── Spinning progress indicator ─────────────────────────────────────────
+    async function runSpinner(parentEl) {
+        const frames = ['\\', '|', '/', '-'];
+        const spinEl = document.createElement('span');
+        spinEl.style.cssText = 'font-family:"Courier New",monospace; color:var(--accent-cyan); margin-left:0.45em;';
+        parentEl.insertBefore(spinEl, typeCursor);
+
+        await sleep(180);
+        for (let i = 0; i < 12; i++) {
+            spinEl.textContent = frames[i % frames.length];
+            await sleep(140);
+        }
+        spinEl.remove();
+    }
+
+    // ── Typewriter ──────────────────────────────────────────────────────────
+    async function typeElement(el, charMs) {
+        const nodes = [];
+        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        let node;
+        while ((node = walker.nextNode())) {
+            nodes.push({ node, text: node.textContent });
+            node.textContent = '';
+        }
+
+        el.style.display = 'block';
+        el.appendChild(typeCursor);
+
+        for (const { node, text } of nodes) {
+            for (const ch of text) {
+                node.textContent += ch;
+                const jitter = (Math.random() - 0.5) * charMs * 0.42;
+                await sleep(Math.max(4, charMs + jitter));
+            }
+        }
+    }
+
+    // ── Sequence ────────────────────────────────────────────────────────────
+    async function run() {
+        const els = document.querySelectorAll('[data-tw]');
+
+        await sleep(550);
+
+        for (const el of els) {
+            const delay = parseInt(el.dataset.twDelay ?? '0', 10);
+            const speed = parseInt(el.dataset.twSpeed ?? '28', 10);
+            const mode  = el.dataset.tw;
+
+            if (delay > 0) await sleep(delay);
+
+            if (mode === 'type') {
+                await typeElement(el, speed);
+                // Special post-type effect for the querying line
+                if (el.id === 'tw-query-line') await runSpinner(el);
+            } else {
+                el.style.display = 'block';
+            }
+
+            if (screen) screen.scrollTop = screen.scrollHeight;
+        }
+
+        typeCursor.remove();
+        audio.done();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', run);
+    } else {
+        run();
+    }
+})();
+</script>
