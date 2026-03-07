@@ -434,5 +434,16 @@ const currentPath = Astro.url.pathname;
         requestAnimationFrame(frame);
     })();
 </script>
+<script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+    document.querySelectorAll('pre[data-language="mermaid"]').forEach((pre) => {
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = pre.querySelector('code').textContent;
+        pre.replaceWith(div);
+    });
+    await mermaid.run();
+</script>
 </body>
 </html>

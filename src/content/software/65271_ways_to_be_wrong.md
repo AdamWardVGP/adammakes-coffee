@@ -70,11 +70,6 @@ It doesn't look inherently wrong but let's think about the possibilities here. R
 can go to any other state. In some systems that could be valid (I haven't seen one yet!), but if not that's another scaling problem.
 
 ```mermaid
----
-config:
-  theme: redux
-  layout: elk
----
 stateDiagram-v2
     Pending --> PaymentProcessing
     Pending --> PaymentFailed
