@@ -40,7 +40,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     <p data-tw="show"></p>
                     <p class="terminal-line" data-tw="type" data-tw-speed="28"><span class="prompt"></span> Handle: <span class="tval cyan">Adam</span></p>
                     <p class="terminal-line" data-tw="type" data-tw-speed="22" data-tw-delay="180"><span class="prompt"></span> Role: <span class="tval green">gamer / cat dad / software engineer</span></p>
-                    <p class="terminal-line" data-tw="type" data-tw-speed="22" data-tw-delay="180"><span class="prompt"></span> Status: <span class="tval yellow">online, probably debugging something</span></p>
+                    <p class="terminal-line" id="tw-status-line" data-tw="type" data-tw-speed="22" data-tw-delay="180"><span class="prompt"></span> Status: <span class="tval access-denied tw-badge" style="display:none">USER ACCESS UNAUTHORIZED</span></p>
                     <p class="terminal-line dim" data-tw="show" data-tw-delay="260">---</p>
                     <p class="terminal-line dim" data-tw="type" data-tw-speed="18" data-tw-delay="60">Record last updated: just today and never again.</p>
                     <p class="terminal-line dim" data-tw="show" data-tw-delay="100">---</p>
@@ -56,6 +56,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     <p class="terminal-line" data-tw="type" data-tw-speed="24" data-tw-delay="220"><span class="prompt"></span> <span class="tval cyan">// elsewhere</span></p>
                     <p class="terminal-output" data-tw="type" data-tw-speed="10" data-tw-delay="140">I'm on the internet in a few places. Reluctantly.</p>
                     <p class="terminal-line terminal-link-line" data-tw="type" data-tw-speed="18" data-tw-delay="100"><span class="prompt"></span> <a href="https://github.com/AdamWardVGP" target="_blank" rel="noopener noreferrer">GitHub</a> - where my actual code lives</p>
+                    <p class="terminal-line terminal-link-line" data-tw="type" data-tw-speed="18" data-tw-delay="100"><span class="prompt"></span> <a href="https://www.linkedin.com/in/wardadam/" target="_blank" rel="noopener noreferrer">LinkedIn</a> - where I pretend to be a professional human</p>
 
                     <p class="terminal-line dim" data-tw="show" data-tw-delay="320">---</p>
 
@@ -206,6 +207,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 .tval.cyan   { color: var(--accent-cyan); }
 .tval.green  { color: var(--accent-green); }
 .tval.yellow { color: var(--accent-yellow); }
+.tval.access-denied {
+    color: #000;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 0.1em 0.5em;
+    border-radius: 2px;
+    animation: access-denied-flash 0.8s step-start infinite;
+}
+@keyframes access-denied-flash {
+    0%, 100% { background: var(--accent-purple); box-shadow: 0 0 8px 2px #c792ea, 0 0 18px 4px #c792ea88; }
+    50% { background: #6a3d8f; box-shadow: 0 0 4px 1px #6a3d8f; }
+}
 
 .terminal-output {
     position: relative;
@@ -397,7 +410,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     // ── Typewriter ──────────────────────────────────────────────────────────
     async function typeElement(el, charMs) {
         const nodes = [];
-        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+            acceptNode(node) {
+                return node.parentElement.closest('.tw-badge')
+                    ? NodeFilter.FILTER_REJECT
+                    : NodeFilter.FILTER_ACCEPT;
+            }
+        });
         let node;
         while ((node = walker.nextNode())) {
             nodes.push({ node, text: node.textContent });
@@ -433,6 +452,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 await typeElement(el, speed);
                 // Special post-type effect for the querying line
                 if (el.id === 'tw-query-line') await runSpinner(el);
+                if (el.id === 'tw-status-line') {
+                    await runSpinner(el);
+                    const badge = el.querySelector('.tw-badge');
+                    if (badge) {
+                        badge.style.display = 'inline';
+                        await sleep(600);
+                    }
+                }
             } else {
                 el.style.display = 'block';
             }
