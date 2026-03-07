@@ -27,6 +27,9 @@ const softwarePosts = await loadSoftware();
                     <li class="update-item">
                         <a href={`/software/${post.slug}`}>{post.data.title}</a>
                         <p class="update-meta">{post.data.date.toLocaleDateString()}</p>
+                        {post.data.description && (
+                            <p class="update-desc">{post.data.description}</p>
+                        )}
                     </li>
                 ))}
             </ul>

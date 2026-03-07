@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const loadCollection = async (name: "recipes" | "blog" | "cats") => {
+const loadCollection = async (name: "recipes" | "software" | "cats") => {
     try {
         return await getCollection(name);
     } catch {
@@ -12,7 +12,7 @@ const loadCollection = async (name: "recipes" | "blog" | "cats") => {
 
 const [recipes, blog, cats] = await Promise.all([
     loadCollection("recipes"),
-    loadCollection("blog"),
+    loadCollection("software"),
     loadCollection("cats"),
 ]);
 
@@ -28,7 +28,7 @@ const updates = [...recipes, ...blog, ...cats]
 
 const entityBasePath: Record<string, string> = {
     recipes: "/recipes",
-    blog: "/software",
+    software: "/software",
     cats: "/catPhotos",
 };
 ---
