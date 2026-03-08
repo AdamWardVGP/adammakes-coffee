@@ -1,6 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import ViewCounter from "../../components/ViewCounter.astro";
+import DiscussionPanel from "../../components/DiscussionPanel.astro";
 
 export async function getStaticPaths() {
     const posts = await getCollection("software");
@@ -23,5 +25,7 @@ const { Content } = await entry.render();
     description={entry.data.description ?? "Software post from Adam Makes Coffee."}
 >
     <h1>{entry.data.title}</h1>
+    <ViewCounter slug={`software:${slug}`} />
     <Content />
+    <DiscussionPanel slug={`software:${slug}`} />
 </BaseLayout>

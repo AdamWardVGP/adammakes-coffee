@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
+import ViewCounter from "../../components/ViewCounter.astro";
+import DiscussionPanel from "../../components/DiscussionPanel.astro";
 
 export async function getStaticPaths() {
     const recipes = await getCollection("recipes");
@@ -27,5 +29,7 @@ const { Content } = await recipe.render();
     description={recipe.data.description ?? "Recipe post from Adam Makes Coffee."}
 >
     <h1>{recipe.data.title}</h1>
+    <ViewCounter slug={`recipe:${slug}`} />
     <Content />
+    <DiscussionPanel slug={`recipe:${slug}`} />
 </BaseLayout>

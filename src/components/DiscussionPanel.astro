@@ -1,0 +1,333 @@
+---
+interface Props {
+    slug: string;
+}
+
+const { slug } = Astro.props;
+---
+
+<section class="discussion-shell" data-slug={slug} aria-label="Discussion">
+    <div class="terminal-counter">
+        <div class="terminal-titlebar">
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-title">terminal — discussion.log</span>
+        </div>
+        <div class="terminal-screen">
+
+            <p class="terminal-line"><span class="prompt">coffee$</span> cat discussion.log</p>
+            <p class="terminal-line dim">reading comments...</p>
+
+            <div class="disc-entries" aria-live="polite">
+                <p class="terminal-line dim">loading...</p>
+            </div>
+
+            <p class="terminal-line dim" style="margin: 0.75rem 0 0.5rem;">---</p>
+
+            <p class="terminal-line"><span class="tval cyan">// leave a comment. no account needed.</span></p>
+
+            <form class="disc-form" novalidate>
+                <div class="disc-field">
+                    <label class="terminal-line">
+                        <span class="prompt"></span> handle<span class="tval cyan">:</span>
+                    </label>
+                    <input
+                        class="disc-handle"
+                        type="text"
+                        maxlength="32"
+                        placeholder="your name or alias"
+                        autocomplete="off"
+                        spellcheck="false"
+                    />
+                </div>
+                <div class="disc-field">
+                    <label class="terminal-line">
+                        <span class="prompt"></span> message<span class="tval cyan">:</span>
+                    </label>
+                    <textarea
+                        class="disc-message"
+                        maxlength="280"
+                        placeholder="say something (max 280 chars)"
+                        rows="3"
+                        spellcheck="false"
+                    ></textarea>
+                </div>
+
+                <p class="terminal-line disc-submit-line">
+                    <span class="prompt">adam@coffee:~$</span>
+                    <button type="submit" class="disc-submit-btn">send</button>
+                    <span class="blink-cursor" aria-hidden="true">&#x2588;</span>
+                </p>
+                <p class="terminal-line dim disc-status" aria-live="polite"></p>
+            </form>
+
+        </div>
+    </div>
+</section>
+
+<script>
+    const SUPABASE_URL = "https://vccaywqqehnttlfxozvz.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_2jqlAiR_WCbai36xXS8idw_0-_mMOkz";
+
+    const panel = document.querySelector<HTMLElement>(".discussion-shell");
+    if (!panel) throw new Error("discussion panel not found");
+
+    const slug = panel.dataset.slug!;
+    const ENDPOINT = `${SUPABASE_URL}/rest/v1/discussion_entries`;
+
+    const baseHeaders: Record<string, string> = {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json",
+    };
+
+    const entriesEl = panel.querySelector<HTMLElement>(".disc-entries")!;
+    const form = panel.querySelector<HTMLFormElement>(".disc-form")!;
+    const handleInput = panel.querySelector<HTMLInputElement>(".disc-handle")!;
+    const messageInput = panel.querySelector<HTMLTextAreaElement>(".disc-message")!;
+    const submitBtn = panel.querySelector<HTMLButtonElement>(".disc-submit-btn")!;
+    const statusEl = panel.querySelector<HTMLElement>(".disc-status")!;
+
+    const formatDate = (iso: string) =>
+        new Date(iso).toLocaleDateString("en-US", {
+            year: "numeric", month: "short", day: "numeric",
+        });
+
+    interface Entry {
+        id: string;
+        handle: string;
+        message: string;
+        is_admin: boolean;
+        created_at: string;
+    }
+
+    const renderEntries = (entries: Entry[]) => {
+        entriesEl.innerHTML = "";
+        if (!entries.length) {
+            const span = document.createElement("span");
+            span.className = "disc-empty";
+            span.textContent = "no comments yet. be the first.";
+            entriesEl.appendChild(span);
+            return;
+        }
+        for (const entry of entries) {
+            const date = document.createElement("span");
+            date.className = "disc-irc-date";
+            date.textContent = formatDate(entry.created_at);
+
+            const handle = document.createElement("span");
+            handle.className = entry.is_admin ? "disc-irc-handle admin" : "disc-irc-handle";
+            handle.textContent = entry.is_admin ? `[${entry.handle}]` : `@${entry.handle}`;
+
+            const pipe = document.createElement("span");
+            pipe.className = "disc-irc-pipe";
+            pipe.textContent = "|";
+
+            const msg = document.createElement("span");
+            msg.className = entry.is_admin ? "disc-irc-msg admin" : "disc-irc-msg";
+            msg.textContent = entry.message;
+
+            entriesEl.append(date, handle, pipe, msg);
+        }
+    };
+
+    const loadEntries = async () => {
+        try {
+            const res = await fetch(
+                `${ENDPOINT}?slug=eq.${encodeURIComponent(slug)}&order=created_at.asc&limit=200`,
+                { headers: baseHeaders }
+            );
+            if (!res.ok) throw new Error();
+            renderEntries(await res.json());
+        } catch {
+            entriesEl.innerHTML = "";
+            const p = document.createElement("p");
+            p.className = "terminal-line dim";
+            p.textContent = "could not load comments.";
+            entriesEl.appendChild(p);
+        }
+    };
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const handle = handleInput.value.trim();
+        const message = messageInput.value.trim();
+
+        if (!handle || !message) {
+            statusEl.textContent = "handle and message are both required.";
+            return;
+        }
+
+        submitBtn.disabled = true;
+        statusEl.textContent = "sending...";
+
+        try {
+            const res = await fetch(ENDPOINT, {
+                method: "POST",
+                headers: { ...baseHeaders, "Prefer": "return=minimal" },
+                body: JSON.stringify({ slug, handle, message }),
+            });
+            if (!res.ok) throw new Error();
+            statusEl.textContent = "comment posted.";
+            handleInput.value = "";
+            messageInput.value = "";
+            await loadEntries();
+        } catch {
+            statusEl.textContent = "something went wrong. try again.";
+        } finally {
+            submitBtn.disabled = false;
+        }
+    });
+
+    loadEntries();
+</script>
+
+<style is:global>
+/* ══ discussion entries grid ══ */
+
+.disc-entries {
+    display: grid;
+    grid-template-columns: max-content max-content max-content 1fr;
+    align-items: baseline;
+    column-gap: 0.6em;
+    row-gap: 0.35rem;
+    margin: 0.5rem 0;
+    font-family: "Courier New", monospace;
+    font-size: 0.82rem;
+}
+
+.disc-empty {
+    grid-column: 1 / -1;
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+.disc-irc-date {
+    color: var(--text-secondary);
+    opacity: 0.65;
+    font-size: 0.78rem;
+    white-space: nowrap;
+    padding-right: 0.8em;
+}
+
+.disc-irc-handle {
+    text-align: right;
+    color: var(--accent-orange);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.disc-irc-handle.admin {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 8px rgba(127, 219, 202, 0.5);
+}
+
+.disc-irc-pipe {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 6px rgba(127, 219, 202, 0.5);
+}
+
+.disc-irc-msg {
+    color: var(--text-primary);
+    word-break: break-word;
+    min-width: 0;
+}
+
+.disc-irc-msg.admin {
+    color: var(--text-bright);
+}
+</style>
+
+<style>
+/* ══ shell ══ */
+
+.discussion-shell {
+    margin-top: 2.5rem;
+}
+
+/* ══ form ══ */
+
+.disc-form {
+    margin-top: 0.5rem;
+}
+
+.disc-field {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+}
+
+.disc-field label {
+    flex-shrink: 0;
+    margin: 0;
+    padding-top: 0.3rem;
+}
+
+.disc-field input,
+.disc-field textarea {
+    flex: 1;
+    background: rgba(1, 22, 39, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-family: "Courier New", monospace;
+    font-size: 0.82rem;
+    padding: 0.3rem 0.5rem;
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.15s;
+}
+
+.disc-field input:focus,
+.disc-field textarea:focus {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 2px rgba(127, 219, 202, 0.12);
+}
+
+.disc-field input::placeholder,
+.disc-field textarea::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.55;
+}
+
+/* ══ submit line ══ */
+
+.disc-submit-line {
+    margin-top: 0.75rem !important;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.disc-submit-btn {
+    background: none;
+    border: none;
+    color: var(--accent-cyan);
+    font-family: "Courier New", monospace;
+    font-size: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.disc-submit-btn:hover {
+    color: var(--text-bright);
+}
+
+.disc-submit-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.disc-status {
+    margin-top: 0.4rem !important;
+}
+
+.tval.cyan {
+    color: var(--accent-cyan);
+}
+</style>

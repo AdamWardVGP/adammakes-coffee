@@ -1,0 +1,80 @@
+---
+interface Props {
+    slug: string;
+}
+
+const { slug } = Astro.props;
+---
+
+<p class="view-counter" data-slug={slug}>
+    <span class="vc-label">// </span><span class="vc-count">—</span><span class="vc-label"> views</span>
+</p>
+
+<script>
+    const SUPABASE_URL = "https://vccaywqqehnttlfxozvz.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_2jqlAiR_WCbai36xXS8idw_0-_mMOkz";
+
+    const el = document.querySelector<HTMLElement>(".view-counter");
+    const countEl = el?.querySelector<HTMLElement>(".vc-count");
+    const slug = el?.dataset.slug;
+
+    if (slug && countEl) {
+        const sessionKey = `viewed:${slug}`;
+        const alreadyCounted = sessionStorage.getItem(sessionKey);
+
+        if (!alreadyCounted) {
+            // First visit this session — increment
+            sessionStorage.setItem(sessionKey, "1");
+            fetch(`${SUPABASE_URL}/rest/v1/rpc/increment_view`, {
+                method: "POST",
+                headers: {
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ page_slug: slug }),
+            })
+                .then((r) => r.ok ? r.json() : null)
+                .then((count) => {
+                    if (typeof count === "number") {
+                        countEl.textContent = count.toLocaleString();
+                    }
+                })
+                .catch(() => {});
+        } else {
+            // Already counted this session — just read the current count
+            fetch(`${SUPABASE_URL}/rest/v1/page_views?slug=eq.${encodeURIComponent(slug)}&select=views`, {
+                headers: {
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+                },
+            })
+                .then((r) => r.ok ? r.json() : null)
+                .then((rows) => {
+                    if (Array.isArray(rows) && rows[0]?.views != null) {
+                        countEl.textContent = rows[0].views.toLocaleString();
+                    }
+                })
+                .catch(() => {});
+        }
+    }
+</script>
+
+<style>
+    .view-counter {
+        font-family: "Courier New", monospace;
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        opacity: 0.6;
+        margin: -0.5rem 0 1.5rem;
+    }
+
+    .vc-label {
+        opacity: 0.7;
+    }
+
+    .vc-count {
+        color: var(--accent-green);
+        font-weight: 700;
+    }
+</style>
