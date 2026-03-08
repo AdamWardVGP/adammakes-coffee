@@ -67,6 +67,17 @@ const currentPath = Astro.url.pathname;
                 <h1>Projects, life, and chaos logs</h1>
                 <p>The corner of the internet with all my random stuff</p>
             </div>
+            <div class="hero-social">
+                <a href="/rss.xml" title="RSS Feed" aria-label="RSS Feed">
+                    <img src="/rss_pixel.webp" alt="RSS" width="28" height="28" />
+                </a>
+<a href="https://github.com/AdamWardVGP" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="GitHub" class="github-icon">
+                    <img src="/8bit_github.png" alt="GitHub" width="28" height="28" />
+                </a>
+                <a href="https://www.linkedin.com/in/wardadam/" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn">
+                    <img src="/pixel_linkedin.webp" alt="LinkedIn" width="28" height="28" />
+                </a>
+            </div>
         </div>
         <nav class="tab-nav" aria-label="Main">
             <a class={currentPath === "/" ? "active" : ""} href="/">coffee</a>
