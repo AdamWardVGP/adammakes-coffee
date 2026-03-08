@@ -27,7 +27,18 @@ const { Content } = await recipe.render();
 <BaseLayout
     title={recipe.data.title}
     description={recipe.data.description ?? "Recipe post from Adam Makes Coffee."}
+    type="article"
+    pubDate={recipe.data.date}
 >
+    <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Recipe",
+        "name": recipe.data.title,
+        "description": recipe.data.description ?? "",
+        "datePublished": recipe.data.date.toISOString(),
+        "author": { "@type": "Person", "name": "Adam", "url": "https://adammakes.coffee/whois" },
+        "url": `https://adammakes.coffee/recipes/${slug}/`,
+    })} />
     <h1>{recipe.data.title}</h1>
     <ViewCounter slug={`recipe:${slug}`} />
     <Content />

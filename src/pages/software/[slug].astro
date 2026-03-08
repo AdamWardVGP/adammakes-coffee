@@ -23,7 +23,19 @@ const { Content } = await entry.render();
 <BaseLayout
     title={entry.data.title}
     description={entry.data.description ?? "Software post from Adam Makes Coffee."}
+    type="article"
+    pubDate={entry.data.date}
 >
+    <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": entry.data.title,
+        "description": entry.data.description ?? "",
+        "datePublished": entry.data.date.toISOString(),
+        "author": { "@type": "Person", "name": "Adam", "url": "https://adammakes.coffee/whois" },
+        "publisher": { "@type": "Person", "name": "Adam Makes Coffee", "url": "https://adammakes.coffee" },
+        "url": `https://adammakes.coffee/software/${slug}/`,
+    })} />
     <h1>{entry.data.title}</h1>
     <ViewCounter slug={`software:${slug}`} />
     <Content />
