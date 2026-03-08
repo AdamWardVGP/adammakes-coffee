@@ -718,22 +718,7 @@ body {
     min-height: 100%;
     position: relative;
     overflow-x: hidden;
-    background:
-            repeating-linear-gradient(
-                    to right,
-                    rgba(127, 219, 202, 0.24) 0,
-                    rgba(127, 219, 202, 0.24) 1px,
-                    transparent 1px,
-                    transparent 20px
-            ),
-            repeating-linear-gradient(
-                    to bottom,
-                    rgba(130, 170, 255, 0.2) 0,
-                    rgba(130, 170, 255, 0.2) 1px,
-                    transparent 1px,
-                    transparent 20px
-            ),
-            linear-gradient(180deg, #09071f 0%, #03223a 35%, #011627 70%, #01111d 100%);
+    background: linear-gradient(180deg, #09071f 0%, #03223a 35%, #011627 70%, #01111d 100%);
     color: var(--text-primary);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     line-height: 1.6;
@@ -891,6 +876,22 @@ pre {
 pre code {
     background: none;
     padding: 0;
+}
+
+.mermaid {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.mermaid > svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    background: transparent !important;
+}
+
+.mermaid > svg rect.background {
+    fill: transparent !important;
 }
 
 /* === TABLES === */

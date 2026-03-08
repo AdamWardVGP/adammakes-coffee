@@ -21,7 +21,7 @@ const posts = (await getCollection("software").catch(() => []))
                     <div class="monitor-speaker">
                         <span></span><span></span><span></span><span></span>
                     </div>
-                    <div class="monitor-logo">&#x2588;&#x2588; CoffeePC &#x2588;&#x2588;</div>
+                    <div class="monitor-logo">&#x2588;&#x2588; CoffeeCo &#x2588;&#x2588;</div>
                     <div class="monitor-speaker">
                         <span></span><span></span><span></span><span></span>
                     </div>
@@ -38,15 +38,16 @@ const posts = (await getCollection("software").catch(() => []))
                                 ) : (
                                     <ul class="slist">
                                         {posts.map((post) => (
-                                            <li>
+                                            <li data-slug={`software:${post.slug}`}>
                                                 <a href={`/software/${post.slug}`} class="sentry">
                                                     <span class="sarrow">&#x25B8;</span>
                                                     <span class="stitle">{post.data.title}</span>
                                                     <span class="syear">[{post.data.date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}]</span>
                                                 </a>
-                                                {post.data.description && (
-                                                    <p class="sdesc">{post.data.description}</p>
-                                                )}
+                                                <div class="smeta">
+                                                    <p class="sdesc">{post.data.description ?? ""}</p>
+                                                    <p class="sviews"><span class="sview-count">—</span> view(s)</p>
+                                                </div>
                                             </li>
                                         ))}
                                     </ul>
@@ -69,18 +70,67 @@ const posts = (await getCollection("software").catch(() => []))
 
                 <div class="monitor-chin" aria-hidden="true">
                     <div class="chin-led"></div>
-                    <div class="chin-label">Coffee Personal Computer 2000</div>
+                    <div class="chin-label">CoffeeCo HyperCube INFINITY</div>
                     <div class="chin-btns"><span></span><span></span></div>
                 </div>
 
             </div>
 
             <div class="monitor-neck" aria-hidden="true"></div>
-            <div class="monitor-foot" aria-hidden="true"></div>
 
-            <!-- Mascot: back of head overlapping bottom-right of monitor -->
-            <div class="sbmail-mascot" aria-hidden="true">
-                <img src="/back_of_head_pixel.svg" alt="" />
+            <!-- Desktop unit: kitbashed Mac Quadra 650 / NES / VCR -->
+            <div class="desktop-unit" aria-hidden="true">
+
+                <!-- LEFT/CENTER: VCR zone -->
+                <div class="dc-vcr">
+                    <div class="fold-bay">
+                        <div class="fold-door">
+                            <div class="fold-hinge fold-hinge--l"></div>
+                            <div class="fold-hinge fold-hinge--r"></div>
+                            <div class="fold-tab"></div>
+                        </div>
+                    </div>
+                    <div class="mac-btns">
+                        <div class="mac-btn">
+                            <span class="btn-face btn-pwr"></span>
+                            <span class="btn-label">POWER</span>
+                        </div>
+                        <div class="mac-btn">
+                            <span class="btn-face btn-rst"></span>
+                            <span class="btn-label">RESET</span>
+                        </div>
+                        <div class="mac-btn">
+                            <span class="btn-face btn-trb"></span>
+                            <span class="btn-label">TURBO</span>
+                        </div>
+                        <div class="mac-btn">
+                            <span class="btn-face btn-lck"></span>
+                            <span class="btn-label">LOCK</span>
+                        </div>
+                        <div class="mac-btn">
+                            <span class="btn-face btn-ejt"></span>
+                            <span class="btn-label">EJECT</span>
+                        </div>
+                    </div>
+                    <div class="vcr-label">HYPERDRIVE Ⅱ</div>
+                </div>
+
+                <!-- RIGHT: branding + ports -->
+                <div class="dc-mac">
+                    <div class="mac-brand">
+                        <span class="mac-product">CoffeeCo HyperCube <span class="mac-infinity">&#x221E;</span></span>
+                    </div>
+                    <div class="mac-port-row">
+                        <div class="dsub-port"></div>
+                        <div class="din-port"></div>
+                    </div>
+                    <div class="mac-sticker" aria-hidden="true">
+                        <span class="sticker-top">RUNS ON</span>
+                        <span class="sticker-icon">&#x2615;</span>
+                        <span class="sticker-bot">COFFEEWARE&#x2122;</span>
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -356,19 +406,38 @@ const posts = (await getCollection("software").catch(() => []))
     color: #010d06;
 }
 
+.smeta {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0 0.4rem 0.5rem 1.6rem;
+}
+
 .sdesc {
     font-family: "Courier New", monospace;
     font-size: 0.72rem;
     color: #006830;
-    margin: 0 0 0.5rem;
-    padding-left: 1.6rem;
-    padding-right: 7rem;
+    margin: 0;
+    flex: 1;
     text-shadow: 0 0 5px rgba(0, 104, 48, 0.4);
+}
+
+.sviews {
+    font-family: "Courier New", monospace;
+    font-size: 0.68rem;
+    color: #004d20;
+    margin: 0;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 li:has(a.sentry:hover) .sdesc {
     color: #004d20;
     text-shadow: none;
+}
+
+li:has(a.sentry:hover) .sviews {
+    color: #003818;
 }
 
 .cursor-line {
@@ -428,46 +497,352 @@ li:has(a.sentry:hover) .sdesc {
 /* ══ stand ══ */
 
 .monitor-neck {
-    width: 70px;
-    height: 18px;
+    width: 340px;
+    height: 20px;
     background: #baa882;
     border: 3px solid #9a8a6a;
     border-top: none;
-    border-radius: 0 0 5px 5px;
+    border-radius: 0 0 2px 2px;
     margin: 0 auto;
-    box-shadow: inset -2px -2px 0 #9a8a6a;
+    box-shadow:
+        inset -3px -3px 0 #9a8a6a,
+        inset 3px 0 0 #cfc0a0;
 }
 
-.monitor-foot {
-    width: 140px;
-    height: 11px;
-    background: #a89870;
-    border: 3px solid #9a8a6a;
-    border-radius: 5px;
-    margin: 0 auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
-}
+/* ══ desktop unit ══ */
 
-/* ══ mascot ══ */
-
-.sbmail-mascot {
-    margin-top: -206px;
-    align-self: flex-end;
-    margin-right: 48px;
+.desktop-unit {
+    width: 100%;
+    background: #cec0a2;
+    border-radius: 3px;
+    box-shadow:
+        inset 4px 4px 0 #e2d8c0,
+        inset -4px -4px 0 #9a8a6a,
+        0 8px 28px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: row;
+    min-height: 88px;
+    padding: 0 0px 8px;
+    gap: 6px;
     position: relative;
-    z-index: 10;
+    overflow: hidden;
 }
 
-.sbmail-mascot img {
+/* ── VCR zone ── */
+
+.dc-vcr {
+    flex: 1;
+    background: #c0b298;
+    border-radius: 2px;
+    padding: 0 8px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: inset 2px 2px 0 #d4c8a8, inset -2px -2px 0 #8a7a60;
+}
+
+.vcr-label {
+    font-family: "Courier New", monospace;
+    font-size: 0.45rem;
+    color: #5a4a30;
+    letter-spacing: 0.16em;
+    text-align: right;
+    margin-top: auto;
+    text-transform: uppercase;
+}
+
+/* ── Mac Quadra zone ── */
+
+.dc-mac {
+    flex: 0 0 150px;
+    background: #d4cab0;
+    border-radius: 2px;
+    padding: 7px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: inset 2px 2px 0 #e8e0cc, inset -2px -2px 0 #9a8a6a;
+    position: relative;
+}
+
+.mac-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mac-product {
+    font-family: "Courier New", monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #5a4a30;
+    letter-spacing: 0.06em;
+}
+
+.mac-infinity {
+    font-size: 1.3rem;
+    line-height: 0;
+    vertical-align: middle;
+}
+
+.mac-sticker {
+    position: absolute;
+    bottom: 9px;
+    right: 94px;
+    width: 58px;
+    height: 44px;
+    border-radius: 3px;
+    background:
+        radial-gradient(circle at 38% 32%, #ffffff88 0%, transparent 55%),
+        conic-gradient(from 200deg, #b8d8f8, #d0c8f0, #f0d8c8, #c8f0d8, #b8d8f8);
+    border: 1px solid #a0b8d0;
+    box-shadow:
+        0 1px 4px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    overflow: hidden;
+}
+
+.sticker-top {
+    font-family: Arial, sans-serif;
+    font-size: 0.3rem;
+    font-weight: 900;
+    color: #1a3a6a;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.sticker-icon {
+    font-size: 1rem;
+    line-height: 1.1;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));
+}
+
+.sticker-bot {
+    font-family: Arial, sans-serif;
+    font-size: 0.28rem;
+    font-weight: 700;
+    color: #1a3a6a;
+    letter-spacing: 0.05em;
+    line-height: 1;
+}
+
+.mac-port-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+/* DE-9 serial port */
+.dsub-port {
+    width: 40px;
+    height: 18px;
+    background: #080808;
+    border: 2px solid #383838;
+    border-radius: 2px;
+    clip-path: polygon(6% 0%, 94% 0%, 100% 100%, 0% 100%);
+    position: relative;
+    box-shadow: inset 0 1px 4px rgba(0,0,0,0.8);
+}
+
+/* top row: 5 pins */
+.dsub-port::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 5px;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: #484848;
+    box-shadow:
+        7px  0 0 #484848,
+        14px 0 0 #484848,
+        21px 0 0 #484848,
+        28px 0 0 #484848;
+}
+
+/* bottom row: 4 pins (offset) */
+.dsub-port::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 9px;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: #484848;
+    box-shadow:
+        7px  0 0 #484848,
+        14px 0 0 #484848,
+        21px 0 0 #484848;
+}
+
+/* fold-down storage bay */
+.fold-bay {
+    width: 100%;
+    height: 52px;
+    background: transparent;
+    border: none;
+    position: relative;
+    overflow: visible;
+}
+
+/* fold-down door: beige panel, appears to hinge at bottom */
+.fold-door {
+    position: absolute;
+    bottom: -2px;   /* overlaps bay border so hinge reads as joint */
+    left: -2px;
+    right: -2px;
+    height: 42px;
+    background: linear-gradient(to bottom, #c8bc9c, #baa882);
+    border: 2px solid #9a8a6a;
+    border-top: 2px solid #7a6a50;  /* shadow edge at the hinge joint */
+    border-radius: 0 0 1px 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+        inset 0 2px 0 #d8ccac,   /* highlight at top of door face */
+        0 3px 6px rgba(0,0,0,0.35);
+}
+
+/* hinge knuckles */
+.fold-hinge {
+    position: absolute;
+    top: -5px;      /* straddles the hinge joint */
+    width: 9px;
+    height: 10px;
+    background: #9a8a6a;
+    border: 1px solid #7a6a50;
+    border-radius: 1px;
+    box-shadow: inset 1px 0 0 #b0a080;
+}
+
+.fold-hinge--l { left: 16px; }
+.fold-hinge--r { right: 16px; }
+
+/* lift tab / finger notch on the door face */
+.fold-tab {
+    width: 28px;
+    height: 5px;
+    background: #a89878;
+    border: 1px solid #8a7858;
+    border-radius: 1px;
+    box-shadow: inset 0 1px 0 #c0b090;
+}
+
+/* PS2-style mini-DIN port */
+.din-port {
+    width: 18px;
+    height: 18px;
+    background: #060606;
+    border: 2px solid #383838;
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.95), 0 1px 0 #484848;
+}
+
+/* center hole */
+.din-port::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 5px;
+    height: 5px;
+    background: #181818;
+    border-radius: 50%;
+    border: 1px solid #444;
+}
+
+/* pin holes via box-shadow */
+.din-port::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: #484848;
+    /* top, bottom, lower-left, lower-right */
+    box-shadow:
+        0 9px 0 #484848,
+        -4px 5px 0 #484848,
+        4px 5px 0 #484848;
+}
+
+.btn-face {
     display: block;
-    image-rendering: pixelated;
-    width: 240px;
-    height: 280px;
-    filter:
-        drop-shadow(0 0 2px rgba(255,255,255,0.8))
-        drop-shadow(0 0 10px rgba(127,219,202,0.5));
+    width: 100%;
+    height: 15px;
+    border: 2px solid;
+    border-radius: 1px;
 }
 
+.btn-label {
+    font-family: "Courier New", monospace;
+    font-size: 0.54rem;
+    color: #2a1a08;
+    letter-spacing: 0.04em;
+    user-select: none;
+}
+
+.mac-btns {
+    display: flex;
+    gap: 3px;
+    align-items: flex-end;
+    flex: 1;
+    max-width: 230px;
+}
+
+.mac-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+}
+
+.btn-pwr {
+    background: #50c050;
+    border-color: #308030;
+    box-shadow: inset 1px 1px 0 #80e080, 0 0 4px rgba(80,192,80,0.4);
+}
+
+.btn-rst {
+    background: #c04040;
+    border-color: #802020;
+    box-shadow: inset 1px 1px 0 #e06060;
+}
+
+.btn-trb {
+    background: #b89000;
+    border-color: #786000;
+    box-shadow: inset 1px 1px 0 #d8b000;
+}
+
+.btn-lck {
+    background: #cec0a2;
+    border-color: #9a8a6a;
+    box-shadow: inset 1px 1px 0 #e2d8c0;
+}
+
+.btn-ejt {
+    background: #4a7ab8;
+    border-color: #2a5a98;
+    box-shadow: inset 1px 1px 0 #7aaad8;
+}
 
 /* ══ responsive ══ */
 
@@ -478,11 +853,6 @@ li:has(a.sentry:hover) .sdesc {
 
     .monitor-top {
         padding: 6px 10px 4px;
-    }
-
-    .sbmail-mascot,
-    .head-reflection {
-        display: none;
     }
 }
 
@@ -545,5 +915,37 @@ li:has(a.sentry:hover) .sdesc {
     document.addEventListener('mouseup', () => {
         if (dragging) { dragging = false; document.body.style.userSelect = ''; }
     });
+})();
+
+// ── view counts (read-only, no increment) ──
+(function () {
+    const SUPABASE_URL = "https://vccaywqqehnttlfxozvz.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_2jqlAiR_WCbai36xXS8idw_0-_mMOkz";
+
+    const items = Array.from(document.querySelectorAll<HTMLElement>('#slist-scroll li[data-slug]'));
+    if (!items.length) return;
+
+    const slugs = items.map(li => li.dataset.slug!);
+    const filter = `slug=in.(${slugs.map(s => encodeURIComponent(s)).join(',')})`;
+
+    fetch(`${SUPABASE_URL}/rest/v1/page_views?${filter}&select=slug,views`, {
+        headers: {
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+    })
+        .then(r => r.ok ? r.json() : [])
+        .then((rows: { slug: string; views: number }[]) => {
+            const bySlug: Record<string, number> = {};
+            rows.forEach(r => { bySlug[r.slug] = r.views; });
+            items.forEach(li => {
+                const slug = li.dataset.slug!;
+                const countEl = li.querySelector('.sview-count');
+                if (countEl && bySlug[slug] != null) {
+                    countEl.textContent = bySlug[slug].toLocaleString();
+                }
+            });
+        })
+        .catch(() => {});
 })();
 </script>
