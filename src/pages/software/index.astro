@@ -2,37 +2,548 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const loadSoftware = async () => {
-    try {
-        return await getCollection("software");
-    } catch {
-        return [];
-    }
-};
-
-const softwarePosts = await loadSoftware();
+const posts = (await getCollection("software").catch(() => []))
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
 
 <BaseLayout
     title="software"
     description="Software projects, notes, and development updates."
 >
-    <section class="panel">
-        <h1>software</h1>
-        {softwarePosts.length === 0 ? (
-            <p>No software posts yet. Add one to start this section.</p>
-        ) : (
-            <ul class="updates-list">
-                {softwarePosts.map((post) => (
-                    <li class="update-item">
-                        <a href={`/software/${post.slug}`}>{post.data.title}</a>
-                        <p class="update-meta">{post.data.date.toLocaleDateString()}</p>
-                        {post.data.description && (
-                            <p class="update-desc">{post.data.description}</p>
-                        )}
-                    </li>
-                ))}
-            </ul>
-        )}
-    </section>
+    <div class="sbmail-shell">
+
+        <div class="sbmail-scene">
+
+            <!-- CRT monitor -->
+            <div class="sbmail-monitor">
+
+                <div class="monitor-top" aria-hidden="true">
+                    <div class="monitor-speaker">
+                        <span></span><span></span><span></span><span></span>
+                    </div>
+                    <div class="monitor-logo">&#x2588;&#x2588; CoffeePC &#x2588;&#x2588;</div>
+                    <div class="monitor-speaker">
+                        <span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+
+                <div class="monitor-bezel">
+                    <div class="monitor-screen">
+                        <div class="scroll-container">
+                            <div class="slist-scroll" id="slist-scroll">
+                                <p class="sbl"><span class="sph">coffee@software&gt;</span> ls -a</p>
+                                <p class="sbl sdim">&nbsp;&nbsp;{posts.length} file(s) found.</p>
+                                {posts.length === 0 ? (
+                                    <p class="sbl sdim">no files.</p>
+                                ) : (
+                                    <ul class="slist">
+                                        {posts.map((post) => (
+                                            <li>
+                                                <a href={`/software/${post.slug}`} class="sentry">
+                                                    <span class="sarrow">&#x25B8;</span>
+                                                    <span class="stitle">{post.data.title}</span>
+                                                    <span class="syear">[{post.data.date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}]</span>
+                                                </a>
+                                                {post.data.description && (
+                                                    <p class="sdesc">{post.data.description}</p>
+                                                )}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                            <div class="custom-scrollbar" aria-hidden="true">
+                                <button class="scroll-btn" id="scroll-up-btn">&#x25B2;</button>
+                                <div class="scroll-track" id="scroll-track">
+                                    <div class="scroll-thumb" id="scroll-thumb"></div>
+                                </div>
+                                <button class="scroll-btn" id="scroll-down-btn">&#x25BC;</button>
+                            </div>
+                        </div>
+                        <p class="sbl cursor-line">
+                            <span class="sph">coffee@software&gt;</span>
+                            <span class="blink-cursor">&#x2588;</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="monitor-chin" aria-hidden="true">
+                    <div class="chin-led"></div>
+                    <div class="chin-label">Coffee Personal Computer 2000</div>
+                    <div class="chin-btns"><span></span><span></span></div>
+                </div>
+
+            </div>
+
+            <div class="monitor-neck" aria-hidden="true"></div>
+            <div class="monitor-foot" aria-hidden="true"></div>
+
+            <!-- Mascot: back of head overlapping bottom-right of monitor -->
+            <div class="sbmail-mascot" aria-hidden="true">
+                <img src="/back_of_head_pixel.svg" alt="" />
+            </div>
+
+        </div>
+    </div>
 </BaseLayout>
+
+<style>
+
+/* ══ shell ══ */
+
+.sbmail-shell {
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 0 3rem;
+}
+
+.sbmail-scene {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 580px;
+}
+
+/* ══ monitor outer ══ */
+
+.sbmail-monitor {
+    width: 100%;
+    background: #cec0a2;
+    border-radius: 10px 10px 3px 3px;
+    box-shadow:
+        inset 4px 4px 0 #e2d8c0,
+        inset -4px -4px 0 #9a8a6a,
+        0 16px 40px rgba(0, 0, 0, 0.5),
+        0 4px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+}
+
+/* ══ top row ══ */
+
+.monitor-top {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    padding: 8px 14px 6px;
+    gap: 0.75rem;
+}
+
+.monitor-speaker {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.monitor-speaker span {
+    display: block;
+    width: 26px;
+    height: 2px;
+    background: #9a8a6a;
+    border-radius: 1px;
+    box-shadow: inset 0 1px 0 rgba(0,0,0,0.2);
+}
+
+.monitor-logo {
+    font-family: "Courier New", monospace;
+    font-size: 0.65rem;
+    color: #3a2a18;
+    letter-spacing: 0.06em;
+    text-align: center;
+}
+
+/* ══ bezel + screen ══ */
+
+.monitor-bezel {
+    margin: 0 12px;
+    background: #6a5a42;
+    border-radius: 4px;
+    padding: 7px;
+    box-shadow:
+        inset 0 0 0 2px #4a3a28,
+        inset 2px 2px 4px rgba(0,0,0,0.4);
+}
+
+.monitor-screen {
+    background: #010d06;
+    border-radius: 2px;
+    height: 280px;
+    padding: 0.8rem;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow:
+        inset 0 0 60px rgba(0, 180, 60, 0.1),
+        inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* CRT scanlines */
+.monitor-screen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.18) 0,
+        rgba(0, 0, 0, 0.18) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+    pointer-events: none;
+    z-index: 3;
+}
+
+/* subtle screen curve vignette */
+.monitor-screen::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, transparent 60%, rgba(0,0,0,0.4) 100%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ══ screen text ══ */
+
+.sbl {
+    font-family: "Courier New", monospace;
+    font-size: 0.82rem;
+    color: #00c850;
+    margin: 0 0 0.2rem;
+    text-shadow: 0 0 7px rgba(0, 200, 80, 0.55);
+}
+
+.sph {
+    color: #00ff70;
+    font-weight: 700;
+}
+
+.sdim {
+    color: #006830;
+    font-size: 0.74rem;
+}
+
+/* ══ article list ══ */
+
+.scroll-container {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    z-index: 5;
+}
+
+.slist-scroll {
+    flex: 1;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    min-height: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 8rem;
+}
+
+.slist-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+/* ══ custom scrollbar ══ */
+
+.custom-scrollbar {
+    width: 16px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    background: #010d06;
+    border-left: 1px solid #00c850;
+}
+
+.scroll-btn {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    background: #010d06;
+    border: 1px solid #00c850;
+    border-left: none;
+    color: #00c850;
+    font-size: 8px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-family: monospace;
+    text-shadow: 0 0 4px rgba(0,200,80,0.6);
+}
+
+.scroll-btn:hover {
+    background: #00c850;
+    color: #010d06;
+    text-shadow: none;
+}
+
+.scroll-track {
+    flex: 1;
+    position: relative;
+    cursor: pointer;
+    background: #010d06;
+}
+
+.scroll-thumb {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: #00c850;
+    box-shadow: 0 0 4px rgba(0,200,80,0.5);
+    cursor: grab;
+    min-height: 16px;
+}
+
+.slist {
+    list-style: none;
+    padding: 0;
+    margin: 0.6rem 0 0.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    position: relative;
+    z-index: 4;
+}
+
+.sentry {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-family: "Courier New", monospace;
+    font-size: 0.82rem;
+    color: #00c850;
+    text-decoration: none;
+    padding: 0.28rem 0.4rem;
+    text-shadow: 0 0 6px rgba(0, 200, 80, 0.4);
+    transition: background 0.06s, color 0.06s, text-shadow 0.06s;
+}
+
+.sentry:hover {
+    background: #00c850;
+    color: #010d06;
+    text-shadow: none;
+    text-decoration: none;
+}
+
+.sarrow {
+    color: #00ff70;
+    flex-shrink: 0;
+}
+
+.stitle {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.syear {
+    color: #006830;
+    font-size: 0.72rem;
+    flex-shrink: 0;
+}
+
+.sentry:hover .sarrow,
+.sentry:hover .syear {
+    color: #010d06;
+}
+
+.sdesc {
+    font-family: "Courier New", monospace;
+    font-size: 0.72rem;
+    color: #006830;
+    margin: 0 0 0.5rem;
+    padding-left: 1.6rem;
+    padding-right: 7rem;
+    text-shadow: 0 0 5px rgba(0, 104, 48, 0.4);
+}
+
+li:has(a.sentry:hover) .sdesc {
+    color: #004d20;
+    text-shadow: none;
+}
+
+.cursor-line {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    position: relative;
+    z-index: 4;
+    flex-shrink: 0;
+    padding-top: 0.2rem;
+}
+
+/* ══ chin ══ */
+
+.monitor-chin {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 7px 16px;
+    margin: 0 12px;
+    border-top: 2px solid #9a8a6a;
+}
+
+.chin-led {
+    width: 7px;
+    height: 7px;
+    background: #00ff60;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #00ff60, 0 0 10px rgba(0, 255, 96, 0.4);
+    flex-shrink: 0;
+}
+
+.chin-label {
+    font-family: "Courier New", monospace;
+    font-size: 0.6rem;
+    color: #9a8a6a;
+    letter-spacing: 0.08em;
+    flex: 1;
+    text-align: center;
+}
+
+.chin-btns {
+    display: flex;
+    gap: 5px;
+}
+
+.chin-btns span {
+    display: block;
+    width: 16px;
+    height: 9px;
+    background: #b8a880;
+    border: 2px solid #9a8a6a;
+    border-radius: 1px;
+    box-shadow: inset 1px 1px 0 #d0c898;
+}
+
+/* ══ stand ══ */
+
+.monitor-neck {
+    width: 70px;
+    height: 18px;
+    background: #baa882;
+    border: 3px solid #9a8a6a;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    margin: 0 auto;
+    box-shadow: inset -2px -2px 0 #9a8a6a;
+}
+
+.monitor-foot {
+    width: 140px;
+    height: 11px;
+    background: #a89870;
+    border: 3px solid #9a8a6a;
+    border-radius: 5px;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* ══ mascot ══ */
+
+.sbmail-mascot {
+    margin-top: -206px;
+    align-self: flex-end;
+    margin-right: 48px;
+    position: relative;
+    z-index: 10;
+}
+
+.sbmail-mascot img {
+    display: block;
+    image-rendering: pixelated;
+    width: 240px;
+    height: 280px;
+    filter:
+        drop-shadow(0 0 2px rgba(255,255,255,0.8))
+        drop-shadow(0 0 10px rgba(127,219,202,0.5));
+}
+
+
+/* ══ responsive ══ */
+
+@media (max-width: 500px) {
+    .sbmail-scene {
+        max-width: 100%;
+    }
+
+    .monitor-top {
+        padding: 6px 10px 4px;
+    }
+
+    .sbmail-mascot,
+    .head-reflection {
+        display: none;
+    }
+}
+
+</style>
+
+<script>
+(function () {
+    const scrollEl = document.getElementById('slist-scroll')!;
+    const thumb    = document.getElementById('scroll-thumb')!;
+    const track    = document.getElementById('scroll-track')!;
+    const upBtn    = document.getElementById('scroll-up-btn')!;
+    const downBtn  = document.getElementById('scroll-down-btn')!;
+    if (!scrollEl || !thumb || !track || !upBtn || !downBtn) return;
+
+    function updateThumb() {
+        const visible   = scrollEl.clientHeight;
+        const total     = scrollEl.scrollHeight;
+        const trackH    = track.clientHeight;
+        const ratio     = visible / total;
+        const thumbH    = Math.max(16, ratio * trackH);
+        const maxScroll = total - visible;
+        const pos       = maxScroll > 0 ? (scrollEl.scrollTop / maxScroll) * (trackH - thumbH) : 0;
+        thumb.style.height = thumbH + 'px';
+        thumb.style.top    = pos + 'px';
+    }
+
+    scrollEl.addEventListener('scroll', updateThumb);
+    window.addEventListener('resize', updateThumb);
+    updateThumb();
+
+    upBtn.addEventListener('click',   () => scrollEl.scrollBy({ top: -48, behavior: 'smooth' }));
+    downBtn.addEventListener('click', () => scrollEl.scrollBy({ top:  48, behavior: 'smooth' }));
+
+    track.addEventListener('click', (e) => {
+        if (e.target === thumb) return;
+        const rect   = track.getBoundingClientRect();
+        const ratio  = (e.clientY - rect.top) / rect.height;
+        const maxScroll = scrollEl.scrollHeight - scrollEl.clientHeight;
+        scrollEl.scrollTop = ratio * maxScroll;
+        updateThumb();
+    });
+
+    let dragging = false, startY = 0, startScrollTop = 0;
+    thumb.addEventListener('mousedown', (e) => {
+        dragging = true;
+        startY = e.clientY;
+        startScrollTop = scrollEl.scrollTop;
+        document.body.style.userSelect = 'none';
+        e.preventDefault();
+    });
+    document.addEventListener('mousemove', (e) => {
+        if (!dragging) return;
+        const dy        = e.clientY - startY;
+        const trackH    = track.clientHeight;
+        const thumbH    = thumb.offsetHeight;
+        const ratio     = (trackH - thumbH) > 0 ? dy / (trackH - thumbH) : 0;
+        const maxScroll = scrollEl.scrollHeight - scrollEl.clientHeight;
+        scrollEl.scrollTop = startScrollTop + ratio * maxScroll;
+    });
+    document.addEventListener('mouseup', () => {
+        if (dragging) { dragging = false; document.body.style.userSelect = ''; }
+    });
+})();
+</script>
