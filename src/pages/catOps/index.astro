@@ -5,7 +5,11 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 const loadMissions = async () => {
     try {
         const all = await getCollection("cats");
-        return all.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+        const sorted = all.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+        return Promise.all(sorted.map(async (entry) => {
+            const { Content } = await entry.render();
+            return { entry, Content };
+        }));
     } catch {
         return [];
     }
@@ -82,7 +86,7 @@ const missions = await loadMissions();
                             <div class="paperclip" aria-hidden="true"></div>
                             <div class="polaroid" style="--rot: -1.8deg">
                                 <img src="/cats/ada_the_fluff.jpg" alt="Ada" />
-                                <div class="polaroid-caption typewriter">subject: ada</div>
+                                <div class="polaroid-caption typewriter">Agent Fluff</div>
                             </div>
                         </div>
                         <div class="passport-fields typewriter">
@@ -94,7 +98,7 @@ const missions = await loadMissions();
                             <div class="field-row">
                                 <span class="field-label">codename</span>
                                 <span class="field-dots"></span>
-                                <span class="field-value">"the fluff"</span>
+                                <span class="field-value">"Agent Fluff"</span>
                             </div>
                             <div class="field-row">
                                 <span class="field-label">species</span>
@@ -122,7 +126,7 @@ const missions = await loadMissions();
                             <div class="paperclip" aria-hidden="true"></div>
                             <div class="polaroid" style="--rot: 1.4deg">
                                 <img src="/cats/izzy_the_noodle.jpg" alt="Izzy" />
-                                <div class="polaroid-caption typewriter">subject: izzy</div>
+                                <div class="polaroid-caption typewriter">Agent Noodle</div>
                             </div>
                         </div>
                         <div class="passport-fields typewriter">
@@ -134,7 +138,7 @@ const missions = await loadMissions();
                             <div class="field-row">
                                 <span class="field-label">codename</span>
                                 <span class="field-dots"></span>
-                                <span class="field-value">"the noodle"</span>
+                                <span class="field-value">Agent Noodle</span>
                             </div>
                             <div class="field-row">
                                 <span class="field-label">species</span>
@@ -181,67 +185,68 @@ const missions = await loadMissions();
 
         <!-- ══ MISSION REPORTS ══ -->
         <div class="missions-section">
-            <div class="section-tab typewriter">mission reports</div>
+            <div class="missions-tab-row">
+                <div class="section-tab typewriter">mission reports</div>
+                {missions.map(({ entry }, i) => (
+                    <button class={`report-tab typewriter${i === 0 ? ' active' : ''}`} data-idx={String(i)}>
+                        {String(missions.length - i).padStart(3, "0")}
+                    </button>
+                ))}
+            </div>
 
-            {missions.length === 0 ? (
-                <div class="mission-report">
+            <div class="missions-body">
+                {missions.length === 0 ? (
                     <p class="typewriter mission-empty">No field reports on file. Surveillance ongoing.</p>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>        <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                    <div class="header-rule"></div>
-                </div>
-            ) : (
-                missions.map((mission, i) => (
-                    <div class="mission-report" style={`--rot: ${i % 2 === 0 ? '-0.5deg' : '0.7deg'}`}>
-                        <div class="mission-header">
-                            <span class="mission-number typewriter">report #{String(missions.length - i).padStart(3, "0")}</span>
-                            <span class="mission-date typewriter">
-                                {mission.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }).toUpperCase()}
-                            </span>
-                            <span class="stamp stamp-red stamp-sm">{mission.data.title}</span>
-                        </div>
-
-                        {mission.data.photos && mission.data.photos.length > 0 && (
-                            <div class="mission-photos">
-                                {mission.data.photos.slice(0, 8).map((photo, j) => (
-                                    <div class="polaroid mission-polaroid"
-                                         style={`--rot: ${j % 2 === 0 ? (0.5 + (j % 4) * 0.5) : -(0.7 + (j % 4) * 0.45)}deg`}>
-                                        <img src={photo.src} alt={photo.caption ?? `photo ${j + 1}`} />
-                                        {photo.caption && <div class="polaroid-caption typewriter">{photo.caption}</div>}
-                                    </div>
-                                ))}
+                ) : (
+                    missions.map(({ entry, Content }, i) => (
+                        <div class={`mission-panel${i === 0 ? '' : ' hidden'}`} data-panel={String(i)}>
+                            <div class="mission-header">
+                                <span class="stamp stamp-red stamp-sm">{entry.data.title}</span>
                             </div>
-                        )}
 
-                        {mission.data.description && (
-                            <p class="mission-text typewriter">{mission.data.description}</p>
-                        )}
-                    </div>
+                            <div class="mission-notes">
+                                <p class="mission-text typewriter mission-label">Date: {entry.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }).toUpperCase()}</p>
+                                {entry.data.description && (
+                                    <>
+                                        <p class="mission-text typewriter mission-label">Summary:</p>
+                                        <p class="mission-text typewriter">{entry.data.description}</p>
+                                    </>
+                                )}
+                                <p class="mission-text typewriter mission-label">Report:</p>
+                                <div class="mission-body typewriter"><Content /></div>
+                            </div>
 
-                ))
-            )}
+                            {entry.data.photos && entry.data.photos.length > 0 && (
+                                <div class="mission-photos">
+                                    {entry.data.photos.slice(0, 8).map((photo, j) => (
+                                        <div class="polaroid mission-polaroid"
+                                             style={`--rot: ${[-3.2,2.8,-1.5,4.1,-2.7,1.9,-3.8,2.3][j%8]}deg; --tx: ${[0,5,-6,2,-3,6,-4,1][j%8]}px; --ty: ${[4,-2,5,-3,2,-5,1,-2][j%8]}px`}>
+                                            {j % 4 === 0 && <div class="mount tape tape--center"></div>}
+                                            {j % 4 === 1 && <div class="mount pushpin pushpin--red"></div>}
+                                            {j % 4 === 2 && <div class="mount tape tape--angled"></div>}
+                                            {j % 4 === 3 && <div class="mount staple"></div>}
+                                            <img src={photo.src} alt={photo.caption ?? `photo ${j + 1}`} />
+                                            {photo.caption && <div class="polaroid-caption typewriter">{photo.caption}</div>}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ))
+                )}
+            </div>
         </div>
 
     </div>
 </BaseLayout>
 
 <style>
+@font-face {
+    font-family: "Lemon Tuesday";
+    src: url("/fonts/lemon_tuesday.otf") format("opentype");
+    font-display: swap;
+}
+
 .dossier-shell {
     display: flex;
     flex-direction: column;
@@ -550,7 +555,40 @@ const missions = await loadMissions();
     z-index: 3;
 }
 
-.mission-report {
+.missions-tab-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.report-tab {
+    font-family: "Courier New", monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #5a3e1a;
+    background: #d4b86a;
+    border: 1px solid #a88630;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    padding: 0.22em 0.85em;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    margin-bottom: -1px;
+    opacity: 0.75;
+}
+
+.report-tab.active {
+    background: #f0e6c6;
+    border-color: #c9b882;
+    color: #1c1008;
+    opacity: 1;
+    z-index: 2;
+}
+
+.missions-body {
     background: #f0e6c6;
     background-image: repeating-linear-gradient(
         transparent 0px, transparent 23px,
@@ -559,11 +597,13 @@ const missions = await loadMissions();
     border: 1px solid #c9b882;
     border-radius: 0 6px 6px 6px;
     padding: 1.1rem 1.25rem 1.3rem;
-    margin-bottom: 2rem;
-    transform: rotate(var(--rot, 0deg));
-    transform-origin: top center;
     box-shadow: 3px 8px 20px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(201, 184, 130, 0.2);
     position: relative;
+    z-index: 1;
+}
+
+.mission-panel.hidden {
+    display: none;
 }
 
 .mission-header {
@@ -576,50 +616,166 @@ const missions = await loadMissions();
     border-bottom: 1px solid rgba(28, 16, 8, 0.15);
 }
 
-.mission-number {
+.mission-date {
+    display: block;
     font-size: 0.62rem;
     color: #5a3e1a;
-    opacity: 0.65;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
-
-.mission-date {
-    font-size: 0.68rem;
-    color: #1c1008;
     letter-spacing: 0.04em;
+    opacity: 0.65;
+    margin-top: 0.4rem;
 }
 
 .mission-photos {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    padding: 0.25rem 0 0.5rem;
+    columns: 2;
+    column-gap: 2rem;
+    margin-bottom: 0.5rem;
+    padding: 1.2rem 0.5rem 1.5rem;
 }
 
 .mission-polaroid {
-    transform: rotate(var(--rot, 0deg));
+    break-inside: avoid;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 2rem;
+    position: relative;
+    transform: rotate(var(--rot, 0deg)) translate(var(--tx, 0px), var(--ty, 0px));
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.mission-polaroid img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: contrast(0.86) saturate(0.82) brightness(0.9) sepia(0.22) hue-rotate(-8deg);
+}
+
+.mission-polaroid .polaroid {
+    padding-bottom: 72px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .mission-polaroid .polaroid-caption {
-    font-size: 0.55rem;
+    font-family: "Lemon Tuesday", cursive;
+    font-size: 1.1rem;
+    height: 72px;
+    color: #2a1a08;
+    line-height: 1.35;
+    align-items: flex-end;
+    padding-bottom: 10px;
 }
 
 .mission-polaroid:hover {
-    transform: rotate(0deg) scale(1.05);
-    box-shadow: 4px 6px 18px rgba(0,0,0,0.28);
-    position: relative;
+    transform: rotate(0deg) translate(0, 0) scale(1.04);
+    box-shadow: 4px 8px 22px rgba(0,0,0,0.32);
     z-index: 10;
 }
 
+/* ── mount decorations ── */
+
+.mount {
+    position: absolute;
+    z-index: 5;
+}
+
+/* scotch tape */
+.tape {
+    width: 58px;
+    height: 20px;
+    background-color: rgba(255, 238, 170, 0.52);
+    background-image:
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.07) 0px, rgba(255,255,255,0.07) 1px, transparent 1px, transparent 5px);
+    border-left: 1px solid rgba(210, 190, 120, 0.35);
+    border-right: 1px solid rgba(210, 190, 120, 0.35);
+}
+
+.tape--center {
+    top: -11px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-1.5deg);
+}
+
+.tape--angled {
+    top: -8px;
+    left: 14px;
+    transform: rotate(12deg);
+}
+
+/* push pin */
+.pushpin {
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.35);
+}
+
+.pushpin::after {
+    content: '';
+    position: absolute;
+    bottom: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 13px;
+    background: linear-gradient(to bottom, #aaa, #555);
+    border-radius: 0 0 2px 2px;
+}
+
+.pushpin--red  { background: radial-gradient(circle at 38% 35%, #ff9090, #c81010); }
+.pushpin--blue { background: radial-gradient(circle at 38% 35%, #90b8ff, #1535cc); }
+
+/* staple */
+.staple {
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 18px;
+    height: 8px;
+    border: 2.5px solid #909090;
+    border-bottom: none;
+    border-radius: 1px 1px 0 0;
+    box-shadow: 1px 0 0 rgba(255,255,255,0.4);
+}
+
+/* ── notes ── */
+
+.mission-notes {
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(28, 16, 8, 0.12);
+}
+
+.notes-rule {
+    display: none;
+}
+
 .mission-text {
-    font-size: 0.78rem;
-    line-height: 1.8;
+    font-size: 0.88rem;
+    line-height: 2;
     color: #1c1008;
-    margin: 0.5rem 0 0;
-    max-width: 70ch;
+    margin: 0;
+    max-width: 72ch;
+}
+
+.mission-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #5a3e1a;
+    opacity: 0.7;
+    margin-bottom: 0.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.mission-body :global(p) {
+    font-size: 0.88rem;
+    line-height: 2;
+    color: #1c1008 !important;
+    margin: 0 0 0.5rem;
+    max-width: 72ch;
 }
 
 .mission-empty {
@@ -648,7 +804,40 @@ const missions = await loadMissions();
         );
     }
     .mission-photos {
-        gap: 0.75rem;
+        columns: 1;
     }
 }
+.mission-polaroid.is-landscape {
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+}
 </style>
+
+<script>
+// ── report tab switching ──
+const reportTabs   = document.querySelectorAll<HTMLElement>('.report-tab');
+const reportPanels = document.querySelectorAll<HTMLElement>('.mission-panel');
+reportTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        const idx = tab.dataset.idx;
+        reportTabs.forEach(t => t.classList.remove('active'));
+        reportPanels.forEach(p => p.classList.add('hidden'));
+        tab.classList.add('active');
+        document.querySelector<HTMLElement>(`[data-panel="${idx}"]`)?.classList.remove('hidden');
+    });
+});
+
+// ── landscape detection ──
+document.querySelectorAll<HTMLElement>('.mission-polaroid').forEach(polaroid => {
+    const img = polaroid.querySelector('img');
+    if (!img) return;
+    const check = () => {
+        if (img.naturalHeight > img.naturalWidth) {
+            polaroid.classList.add('is-landscape');
+        }
+    };
+    if (img.complete) check();
+    else img.addEventListener('load', check);
+});
+</script>

@@ -6,13 +6,13 @@ date: 2026-03-07
 
 There's a particular kind of broken that's hard to fix. Not the kind that throws exceptions or brings down prod. The kind that just... slows you down. Quietly. Consistently. Until one day someone looks at the DAU graph and asks why it's trending the wrong direction.
 
-It didn't start that way, but it's one of the problems I found myself solving at SoundHound AI.
+It didn't start that way, but it's one of the problems I found myself solving during my career.
 
 ---
 
 ## The System That Worked Until It Didn't
 
-Before I joined, someone had built something genuinely clever. The app was content-heavy (music, artists, albums, discovery surfaces) and they needed a way to drive what showed up on screen without shipping a new client every time product had an idea. So they built a server-driven content system.
+Before I joined, someone had built something genuinely clever. The app I worked on was content-heavy (music, artists, albums, discovery surfaces) and they needed a way to drive what showed up on screen without shipping a new client every time product had an idea. So they built a server-driven content system.
 
 The server would respond with a document. The client would parse it. Layouts, links, content all specified server-side. The client's job was a boring front end left to just render what it was told.
 
@@ -20,7 +20,7 @@ For a while, this was great. Ship a new content experience? Update the server. N
 
 But systems have a way of calcifying around their original assumptions.
 
-The client-side implementation had grown into nested XML parsers. Fragments were XML parsers creating nested fragment parsers. Each layout was essentially a hardcoded contract between a server document shape and a client rendering path. Adding a new layout meant touching both ends in a very specific, very fragile way. The content engine on the backend had its own complexity that made new layout support expensive to build and expensive to maintain.
+The client-side implementation had grown into nested XML parsers each bound to a Fragment. Each layout was essentially a hardcoded contract between a server document shape and a client rendering path. Adding a new layout meant touching both ends in a very specific, very fragile way. The content engine on the backend had its own complexity that made new layout support expensive to build and expensive to maintain.
 
 So product and design would come with ideas. And we'd say: "that layout doesn't exist yet." And building it would take longer than anyone wanted. ideas would get scoped down or deferred indefinitely.
 
