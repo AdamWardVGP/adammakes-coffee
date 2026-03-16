@@ -127,7 +127,7 @@ const posts = (await getCollection("software").catch(() => []))
                     <div class="mac-sticker" aria-hidden="true">
                         <span class="sticker-top">RUNS ON</span>
                         <span class="sticker-icon">&#x2615;</span>
-                        <span class="sticker-bot">COFFEEWARE&#x2122;</span>
+                        <span class="sticker-bot">CAFFEINE OS&#x2122;</span>
                     </div>
                 </div>
 
@@ -152,7 +152,7 @@ const posts = (await getCollection("software").catch(() => []))
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 580px;
+    max-width: 616px;
 }
 
 /* ══ monitor outer ══ */
@@ -271,8 +271,8 @@ const posts = (await getCollection("software").catch(() => []))
 }
 
 .sdim {
-    color: #006830;
-    font-size: 0.74rem;
+    color: #00a040;
+    font-size: 0.82rem;
 }
 
 /* ══ article list ══ */
@@ -396,8 +396,8 @@ const posts = (await getCollection("software").catch(() => []))
 }
 
 .syear {
-    color: #006830;
-    font-size: 0.72rem;
+    color: #00a040;
+    font-size: 0.78rem;
     flex-shrink: 0;
 }
 
@@ -415,29 +415,29 @@ const posts = (await getCollection("software").catch(() => []))
 
 .sdesc {
     font-family: "Courier New", monospace;
-    font-size: 0.72rem;
-    color: #006830;
+    font-size: 0.78rem;
+    color: #00a040;
     margin: 0;
     flex: 1;
-    text-shadow: 0 0 5px rgba(0, 104, 48, 0.4);
+    text-shadow: 0 0 5px rgba(0, 160, 64, 0.5);
 }
 
 .sviews {
     font-family: "Courier New", monospace;
-    font-size: 0.68rem;
-    color: #004d20;
+    font-size: 0.74rem;
+    color: #008030;
     margin: 0;
     flex-shrink: 0;
     white-space: nowrap;
 }
 
 li:has(a.sentry:hover) .sdesc {
-    color: #004d20;
+    color: #00a040;
     text-shadow: none;
 }
 
 li:has(a.sentry:hover) .sviews {
-    color: #003818;
+    color: #010d06;
 }
 
 .cursor-line {
@@ -472,8 +472,8 @@ li:has(a.sentry:hover) .sviews {
 
 .chin-label {
     font-family: "Courier New", monospace;
-    font-size: 0.6rem;
-    color: #9a8a6a;
+    font-size: 0.8rem;
+    color: #615641;
     letter-spacing: 0.08em;
     flex: 1;
     text-align: center;
@@ -497,7 +497,7 @@ li:has(a.sentry:hover) .sviews {
 /* ══ stand ══ */
 
 .monitor-neck {
-    width: 340px;
+    width: 408px;
     height: 20px;
     background: #baa882;
     border: 3px solid #9a8a6a;
@@ -516,14 +516,14 @@ li:has(a.sentry:hover) .sviews {
     background: #cec0a2;
     border-radius: 3px;
     box-shadow:
-        inset 4px 4px 0 #e2d8c0,
-        inset -4px -4px 0 #9a8a6a,
-        0 8px 28px rgba(0, 0, 0, 0.5);
+        inset 5px 5px 0 #e2d8c0,
+        inset -5px -5px 0 #9a8a6a,
+        0 10px 36px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: row;
-    min-height: 88px;
-    padding: 6px 8px 8px;
-    gap: 6px;
+    min-height: 114px;
+    padding: 8px 10px 10px;
+    gap: 8px;
     position: relative;
     overflow: hidden;
 }
@@ -534,16 +534,16 @@ li:has(a.sentry:hover) .sviews {
     flex: 1;
     background: #c0b298;
     border-radius: 2px;
-    padding: 0 8px 8px;
+    padding: 0 10px 10px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     box-shadow: inset 2px 2px 0 #d4c8a8, inset -2px -2px 0 #8a7a60;
 }
 
 .vcr-label {
     font-family: "Courier New", monospace;
-    font-size: 0.45rem;
+    font-size: 0.585rem;
     color: #5a4a30;
     letter-spacing: 0.16em;
     text-align: right;
@@ -554,10 +554,10 @@ li:has(a.sentry:hover) .sviews {
 /* ── Mac Quadra zone ── */
 
 .dc-mac {
-    flex: 0 0 150px;
+    flex: 0 0 195px;
     background: #d4cab0;
     border-radius: 2px;
-    padding: 7px;
+    padding: 9px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -568,30 +568,30 @@ li:has(a.sentry:hover) .sviews {
 .mac-brand {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
 }
 
 .mac-product {
     font-family: "Courier New", monospace;
-    font-size: 0.65rem;
+    font-size: 0.845rem;
     font-weight: 700;
     color: #5a4a30;
     letter-spacing: 0.06em;
 }
 
 .mac-infinity {
-    font-size: 1.3rem;
+    font-size: 1.69rem;
     line-height: 0;
     vertical-align: middle;
 }
 
 .mac-sticker {
     position: absolute;
-    bottom: 9px;
-    right: 94px;
-    width: 58px;
-    height: 44px;
-    border-radius: 3px;
+    bottom: 12px;
+    right: 122px;
+    width: 75px;
+    height: 57px;
+    border-radius: 4px;
     background:
         radial-gradient(circle at 38% 32%, #ffffff88 0%, transparent 55%),
         conic-gradient(from 200deg, #b8d8f8, #d0c8f0, #f0d8c8, #c8f0d8, #b8d8f8);
@@ -609,7 +609,7 @@ li:has(a.sentry:hover) .sviews {
 
 .sticker-top {
     font-family: Arial, sans-serif;
-    font-size: 0.3rem;
+    font-size: 0.49rem;
     font-weight: 900;
     color: #1a3a6a;
     letter-spacing: 0.08em;
@@ -618,14 +618,14 @@ li:has(a.sentry:hover) .sviews {
 }
 
 .sticker-icon {
-    font-size: 1rem;
+    font-size: 1.3rem;
     line-height: 1.1;
     filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));
 }
 
 .sticker-bot {
     font-family: Arial, sans-serif;
-    font-size: 0.28rem;
+    font-size: 0.49rem;
     font-weight: 700;
     color: #1a3a6a;
     letter-spacing: 0.05em;
@@ -636,13 +636,13 @@ li:has(a.sentry:hover) .sviews {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 5px;
+    gap: 7px;
 }
 
 /* DE-9 serial port */
 .dsub-port {
-    width: 40px;
-    height: 18px;
+    width: 52px;
+    height: 23px;
     background: #080808;
     border: 2px solid #383838;
     border-radius: 2px;
@@ -655,39 +655,39 @@ li:has(a.sentry:hover) .sviews {
 .dsub-port::before {
     content: '';
     position: absolute;
-    top: 3px;
-    left: 5px;
+    top: 4px;
+    left: 7px;
     width: 2px;
     height: 2px;
     border-radius: 50%;
     background: #484848;
     box-shadow:
-        7px  0 0 #484848,
-        14px 0 0 #484848,
-        21px 0 0 #484848,
-        28px 0 0 #484848;
+        9px  0 0 #484848,
+        18px 0 0 #484848,
+        27px 0 0 #484848,
+        36px 0 0 #484848;
 }
 
 /* bottom row: 4 pins (offset) */
 .dsub-port::after {
     content: '';
     position: absolute;
-    top: 8px;
-    left: 9px;
+    top: 10px;
+    left: 12px;
     width: 2px;
     height: 2px;
     border-radius: 50%;
     background: #484848;
     box-shadow:
-        7px  0 0 #484848,
-        14px 0 0 #484848,
-        21px 0 0 #484848;
+        9px  0 0 #484848,
+        18px 0 0 #484848,
+        27px 0 0 #484848;
 }
 
 /* fold-down storage bay */
 .fold-bay {
     width: 100%;
-    height: 52px;
+    height: 68px;
     background: transparent;
     border: none;
     position: relative;
@@ -700,7 +700,7 @@ li:has(a.sentry:hover) .sviews {
     bottom: -2px;   /* overlaps bay border so hinge reads as joint */
     left: -2px;
     right: -2px;
-    height: 42px;
+    height: 55px;
     background: linear-gradient(to bottom, #c8bc9c, #baa882);
     border: 2px solid #9a8a6a;
     border-top: 2px solid #7a6a50;  /* shadow edge at the hinge joint */
@@ -716,22 +716,22 @@ li:has(a.sentry:hover) .sviews {
 /* hinge knuckles */
 .fold-hinge {
     position: absolute;
-    top: -5px;      /* straddles the hinge joint */
-    width: 9px;
-    height: 10px;
+    top: -7px;      /* straddles the hinge joint */
+    width: 12px;
+    height: 13px;
     background: #9a8a6a;
     border: 1px solid #7a6a50;
     border-radius: 1px;
     box-shadow: inset 1px 0 0 #b0a080;
 }
 
-.fold-hinge--l { left: 16px; }
-.fold-hinge--r { right: 16px; }
+.fold-hinge--l { left: 21px; }
+.fold-hinge--r { right: 21px; }
 
 /* lift tab / finger notch on the door face */
 .fold-tab {
-    width: 28px;
-    height: 5px;
+    width: 36px;
+    height: 7px;
     background: #a89878;
     border: 1px solid #8a7858;
     border-radius: 1px;
@@ -740,8 +740,8 @@ li:has(a.sentry:hover) .sviews {
 
 /* PS2-style mini-DIN port */
 .din-port {
-    width: 18px;
-    height: 18px;
+    width: 23px;
+    height: 23px;
     background: #060606;
     border: 2px solid #383838;
     border-radius: 50%;
@@ -757,8 +757,8 @@ li:has(a.sentry:hover) .sviews {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 5px;
-    height: 5px;
+    width: 7px;
+    height: 7px;
     background: #181818;
     border-radius: 50%;
     border: 1px solid #444;
@@ -768,7 +768,7 @@ li:has(a.sentry:hover) .sviews {
 .din-port::after {
     content: '';
     position: absolute;
-    top: 3px;
+    top: 4px;
     left: 50%;
     transform: translateX(-50%);
     width: 2px;
@@ -777,22 +777,22 @@ li:has(a.sentry:hover) .sviews {
     background: #484848;
     /* top, bottom, lower-left, lower-right */
     box-shadow:
-        0 9px 0 #484848,
-        -4px 5px 0 #484848,
-        4px 5px 0 #484848;
+        0 12px 0 #484848,
+        -5px 6px 0 #484848,
+        5px 6px 0 #484848;
 }
 
 .btn-face {
     display: block;
     width: 100%;
-    height: 15px;
+    height: 20px;
     border: 2px solid;
     border-radius: 1px;
 }
 
 .btn-label {
     font-family: "Courier New", monospace;
-    font-size: 0.54rem;
+    font-size: 0.7rem;
     color: #2a1a08;
     letter-spacing: 0.04em;
     user-select: none;
@@ -800,17 +800,17 @@ li:has(a.sentry:hover) .sviews {
 
 .mac-btns {
     display: flex;
-    gap: 3px;
+    gap: 4px;
     align-items: flex-end;
     flex: 1;
-    max-width: 230px;
+    max-width: 300px;
 }
 
 .mac-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 3px;
     flex: 1;
 }
 
