@@ -14,6 +14,7 @@
 <style>
 .photo-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 2rem;
     justify-content: center;
     align-items: flex-start;
@@ -24,5 +25,13 @@
 /* override the block-centering margin from float-none when inside a row */
 .photo-row :global(.inline-mission-photo) {
     margin: 0 !important;
+}
+
+/* stack vertically when the row is too narrow to fit side by side */
+@media (max-width: 640px) {
+    .photo-row {
+        flex-direction: column;
+        align-items: center;
+    }
 }
 </style>
