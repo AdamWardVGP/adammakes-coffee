@@ -1,0 +1,202 @@
+---
+interface Props {
+    src: string;
+    caption?: string;
+    mount?: 'tape' | 'tape-angled' | 'pushpin-red' | 'pushpin-blue' | 'pushpin-green' | 'paperclip';
+    float?: 'left' | 'right' | 'none';
+    rot?: number;
+    textRot?: number;
+    pos?: string;
+    zoom?: number;
+    landscape?: boolean;
+}
+
+const MOUNTS = ['tape', 'tape-angled', 'pushpin-red', 'pushpin-blue', 'pushpin-green', 'paperclip'] as const;
+
+const {
+    src,
+    caption,
+    mount = MOUNTS[Math.floor(Math.random() * MOUNTS.length)],
+    float = 'none',
+    rot = parseFloat((Math.random() * 8 - 4).toFixed(1)),
+    textRot = parseFloat((Math.random() * 4 - 2).toFixed(1)),
+    pos = 'center center',
+    zoom = 1,
+    landscape = false,
+} = Astro.props;
+---
+
+<div class:list={['inline-mission-photo', `float-${float}`, { landscape }]} style={`--rot: ${rot}deg`}>
+    {mount === 'tape'          && <div class="mount tape tape--center"></div>}
+    {mount === 'tape-angled'   && <div class="mount tape tape--angled"></div>}
+    {mount === 'pushpin-red'   && <div class="mount pushpin pushpin--red"></div>}
+    {mount === 'pushpin-blue'  && <div class="mount pushpin pushpin--blue"></div>}
+    {mount === 'pushpin-green' && <div class="mount pushpin pushpin--green"></div>}
+    {mount === 'paperclip'     && <div class="mount paperclip"></div>}
+    <div class="polaroid">
+        <div class:list={['photo-frame', { landscape }]}>
+            <img src={src} alt={caption ?? ''} style={`object-position: ${pos}; transform: scale(${zoom})`} />
+        </div>
+        {caption && <div class="polaroid-caption" style={`transform: rotate(${textRot}deg)`}>{caption}</div>}
+    </div>
+</div>
+
+<style>
+.inline-mission-photo {
+    position: relative;
+    display: inline-block;
+    margin: 0.5rem 0 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.float-right {
+    float: right;
+    margin-left: 2rem;
+    margin-right: 0.5rem;
+    clear: right;
+}
+
+.float-left {
+    float: left;
+    margin-right: 2rem;
+    margin-left: 0.5rem;
+    clear: left;
+}
+
+.float-none {
+    display: block;
+    clear: both;
+    margin: 1.5rem auto 2rem;
+}
+
+.inline-mission-photo:hover {
+    z-index: 10;
+    transform: rotate(0deg) scale(1.04) !important;
+}
+
+.polaroid {
+    background: #fff;
+    padding: 9px 9px 56px;
+    box-shadow: 2px 3px 10px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.05);
+    transform: rotate(var(--rot, -2deg));
+    width: 270px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.landscape .polaroid {
+    width: 370px;
+}
+
+.photo-frame {
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+}
+
+.photo-frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.85);
+    transform-origin: center center;
+}
+
+.polaroid-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Lacquer Regular", "Courier New", monospace;
+    font-size: 0.95rem;
+    color: #2a1a08;
+    text-align: center;
+    padding: 0 9px;
+    line-height: 1.3;
+}
+
+/* ── mount decorations ── */
+.mount {
+    position: absolute;
+    z-index: 5;
+}
+
+.tape {
+    width: 120px;
+    height: 46px;
+    background-color: rgba(210, 230, 255, 0.72);
+    background-image:
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.3) 0px, rgba(255,255,255,0.3) 1px, transparent 1px, transparent 4px),
+        linear-gradient(to bottom, rgba(255,255,255,0.4) 0%, rgba(200,220,255,0.1) 100%);
+    border-left: 1px solid rgba(160, 200, 240, 0.6);
+    border-right: 1px solid rgba(160, 200, 240, 0.6);
+}
+
+.tape--center {
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-1.5deg);
+}
+
+.tape--angled {
+    top: -10px;
+    left: 14px;
+    transform: rotate(12deg);
+}
+
+.pushpin {
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.35);
+}
+
+.pushpin::after {
+    content: '';
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 14px;
+    background: linear-gradient(to bottom, #aaa, #555);
+    border-radius: 0 0 2px 2px;
+}
+
+.pushpin--red   { background: radial-gradient(circle at 38% 35%, #ff9090, #c81010); }
+.pushpin--blue  { background: radial-gradient(circle at 38% 35%, #90b8ff, #1535cc); }
+.pushpin--green { background: radial-gradient(circle at 38% 35%, #90e0a0, #0d8a35); }
+
+/* ── paperclip ── */
+.paperclip {
+    top: -28px;
+    left: 22px;
+    width: 13px;
+    height: 44px;
+    border: 3px solid #b0b0b0;
+    border-radius: 7px 7px 0 0;
+    border-bottom: none;
+    background: transparent;
+    box-shadow: 1px 1px 0 rgba(255,255,255,0.6);
+}
+
+.paperclip::before {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: 2px;
+    width: 5px;
+    height: 26px;
+    border: 2.5px solid #b0b0b0;
+    border-radius: 4px 4px 0 0;
+    border-bottom: none;
+}
+</style>

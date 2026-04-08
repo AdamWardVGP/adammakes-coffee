@@ -1,5 +1,5 @@
 ---
-title: "Mission: Solo patrol"
+title: "Solo Patrol"
 description: "Agent Fluff inspects the carpet while Agent Noodle demands a field op."
 date: 2026-03-04
 photos:
@@ -8,7 +8,7 @@ photos:
   - src: "/cats/missions/01/Izzy1.jpg"
     caption: "Sweep complete. No targets identified."
   - src: "/cats/missions/01/Izzy2.jpg"
-    caption: "Threat level: unclear but suspicious."
+    caption: "Threat level unclear but suspicious."
   - src: "/cats/missions/01/Izzy3.jpg"
     caption: "Time to relax. Such water. Much awe."
 ---

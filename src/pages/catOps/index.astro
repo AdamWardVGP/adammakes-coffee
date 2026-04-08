@@ -189,7 +189,7 @@ const missions = await loadMissions();
                 <div class="section-tab typewriter">mission reports</div>
                 {missions.map(({ entry }, i) => (
                     <button class={`report-tab typewriter${i === 0 ? ' active' : ''}`} data-idx={String(i)}>
-                        {String(missions.length - i).padStart(3, "0")}
+                        {entry.data.title}
                     </button>
                 ))}
             </div>
@@ -201,15 +201,16 @@ const missions = await loadMissions();
                     missions.map(({ entry, Content }, i) => (
                         <div class={`mission-panel${i === 0 ? '' : ' hidden'}`} data-panel={String(i)}>
                             <div class="mission-header">
-                                <span class="stamp stamp-red stamp-sm">{entry.data.title}</span>
+                                <span class="stamp stamp-red stamp-lg">{entry.data.title}</span>
+                                <span class="mission-header-date typewriter">{entry.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }).toUpperCase()}</span>
                             </div>
 
                             <div class="mission-notes">
-                                <p class="mission-text typewriter mission-label">Date: {entry.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }).toUpperCase()}</p>
                                 {entry.data.description && (
                                     <>
                                         <p class="mission-text typewriter mission-label">Summary:</p>
                                         <p class="mission-text typewriter">{entry.data.description}</p>
+                                        <p class="mission-text typewriter">&nbsp;</p>
                                     </>
                                 )}
                                 <p class="mission-text typewriter mission-label">Report:</p>
@@ -241,9 +242,17 @@ const missions = await loadMissions();
 </BaseLayout>
 
 <style>
+/*
 @font-face {
     font-family: "Lemon Tuesday";
     src: url("/fonts/lemon_tuesday.otf") format("opentype");
+    font-display: swap;
+}
+*/
+
+@font-face {
+    font-family: "Lacquer Regular";
+    src: url("/fonts/lacquer_regular.ttf") format("opentype");
     font-display: swap;
 }
 
@@ -346,6 +355,13 @@ const missions = await loadMissions();
     font-size: 0.58rem;
     border-width: 1.5px;
     transform: rotate(-1.2deg);
+}
+
+.stamp-lg {
+    font-size: 1rem;
+    border-width: 2.5px;
+    transform: rotate(-1.2deg);
+    padding: 0.15em 0.6em;
 }
 
 /* ══ section tab ══ */
@@ -603,11 +619,18 @@ const missions = await loadMissions();
 .mission-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.2rem;
     flex-wrap: wrap;
     margin-bottom: 1rem;
     padding-bottom: 0.55rem;
     border-bottom: 1px solid rgba(28, 16, 8, 0.15);
+}
+
+.mission-header-date {
+    font-size: 0.65rem;
+    color: #5a3e1a;
+    letter-spacing: 0.06em;
+    opacity: 0.65;
 }
 
 .mission-date {
@@ -649,7 +672,7 @@ const missions = await loadMissions();
 }
 
 .mission-polaroid .polaroid-caption {
-    font-family: "Lemon Tuesday", cursive;
+    font-family: "Lacquer Regular";
     font-size: 1.1rem;
     height: 72px;
     color: #2a1a08;
@@ -743,7 +766,6 @@ const missions = await loadMissions();
     line-height: 2;
     color: #1c1008;
     margin: 0;
-    max-width: 72ch;
 }
 
 .mission-label {
@@ -761,7 +783,30 @@ const missions = await loadMissions();
     line-height: 2;
     color: #1c1008 !important;
     margin: 0 0 0.5rem;
-    max-width: 72ch;
+}
+
+.mission-body :global(h2) {
+    font-family: "Courier New", monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #5a3e1a;
+    margin: 1.8rem 0 0.4rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid rgba(28, 16, 8, 0.2);
+    opacity: 0.85;
+}
+
+.mission-body :global(h3) {
+    font-family: "Courier New", monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #5a3e1a;
+    margin: 1.2rem 0 0.3rem;
+    opacity: 0.7;
 }
 
 .mission-empty {

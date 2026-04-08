@@ -1,0 +1,28 @@
+---
+// Wraps two MissionPhoto components side by side.
+// Usage:
+//   <MissionPhotoRow>
+//     <MissionPhoto src="..." caption="..." />
+//     <MissionPhoto src="..." caption="..." />
+//   </MissionPhotoRow>
+---
+
+<div class="photo-row">
+    <slot />
+</div>
+
+<style>
+.photo-row {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    align-items: flex-start;
+    clear: both;
+    margin: 1.5rem 0 2rem;
+}
+
+/* override the block-centering margin from float-none when inside a row */
+.photo-row :global(.inline-mission-photo) {
+    margin: 0 !important;
+}
+</style>
