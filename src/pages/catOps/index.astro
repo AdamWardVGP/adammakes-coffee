@@ -206,14 +206,6 @@ const missions = await loadMissions();
                             </div>
 
                             <div class="mission-notes">
-                                {entry.data.description && (
-                                    <>
-                                        <p class="mission-text typewriter mission-label">Summary:</p>
-                                        <p class="mission-text typewriter">{entry.data.description}</p>
-                                        <p class="mission-text typewriter">&nbsp;</p>
-                                    </>
-                                )}
-                                <p class="mission-text typewriter mission-label">Report:</p>
                                 <div class="mission-body typewriter"><Content /></div>
                             </div>
 
@@ -631,6 +623,7 @@ const missions = await loadMissions();
     color: #5a3e1a;
     letter-spacing: 0.06em;
     opacity: 0.65;
+    margin-left: auto;
 }
 
 .mission-date {

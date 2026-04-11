@@ -7,8 +7,11 @@ interface Props {
     rot?: number;
     textRot?: number;
     pos?: string;
+    panX?: number;
+    panY?: number;
     zoom?: number;
     landscape?: boolean;
+    portrait?: boolean;
 }
 
 const MOUNTS = ['tape', 'tape-angled', 'pushpin-red', 'pushpin-blue', 'pushpin-green', 'paperclip'] as const;
@@ -21,12 +24,19 @@ const {
     rot = parseFloat((Math.random() * 8 - 4).toFixed(1)),
     textRot = parseFloat((Math.random() * 4 - 2).toFixed(1)),
     pos = 'center center',
+    panX,
+    panY,
     zoom = 1,
     landscape = false,
+    portrait = false,
 } = Astro.props;
+
+const objectPos = (panX !== undefined || panY !== undefined)
+    ? `${panX ?? 50}% ${panY ?? 50}%`
+    : pos;
 ---
 
-<div class:list={['inline-mission-photo', `float-${float}`, { landscape }]} style={`--rot: ${rot}deg`}>
+<div class:list={['inline-mission-photo', `float-${float}`, { landscape, portrait }]} style={`--rot: ${rot}deg`}>
     {mount === 'tape'          && <div class="mount tape tape--center"></div>}
     {mount === 'tape-angled'   && <div class="mount tape tape--angled"></div>}
     {mount === 'pushpin-red'   && <div class="mount pushpin pushpin--red"></div>}
@@ -34,8 +44,8 @@ const {
     {mount === 'pushpin-green' && <div class="mount pushpin pushpin--green"></div>}
     {mount === 'paperclip'     && <div class="mount paperclip"></div>}
     <div class="polaroid">
-        <div class:list={['photo-frame', { landscape }]}>
-            <img src={src} alt={caption ?? ''} style={`object-position: ${pos}; transform: scale(${zoom})`} />
+        <div class:list={['photo-frame', { landscape, portrait }]}>
+            <img src={src} alt={caption ?? ''} style={`object-position: ${objectPos}; transform: scale(${zoom})`} />
         </div>
         {caption && <div class="polaroid-caption" style={`transform: rotate(${textRot}deg)`}>{caption}</div>}
     </div>
@@ -65,6 +75,7 @@ const {
 
 .float-none {
     display: block;
+    width: fit-content;
     clear: both;
     margin: 1.5rem auto 2rem;
 }
@@ -86,6 +97,10 @@ const {
 
 .landscape .polaroid {
     width: 370px;
+}
+
+.portrait .photo-frame {
+    height: 340px;
 }
 
 .photo-frame {
