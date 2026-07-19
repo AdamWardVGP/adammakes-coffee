@@ -1,7 +1,7 @@
 ---                                                                                                                                                                              
 title: "Hire one. No PM. Port this 7-year-old iOS app to Android."                                                                                                         
 description: "The most useful thing I did that year was not do that."
-date: 2026-7-19
+date: 2026-07-19
 ---        
 
 # Hire one. No PM. Port this 7-year-old iOS app to Android.
