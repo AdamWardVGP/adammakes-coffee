@@ -67,20 +67,24 @@ const { slug } = Astro.props;
 </section>
 
 <script>
-    const SUPABASE_URL = "https://vccaywqqehnttlfxozvz.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_2jqlAiR_WCbai36xXS8idw_0-_mMOkz";
+    import { db } from "../lib/firebase";
+    import {
+        collection,
+        query,
+        where,
+        orderBy,
+        limit,
+        getDocs,
+        addDoc,
+        serverTimestamp,
+        Timestamp,
+    } from "firebase/firestore";
 
     const panel = document.querySelector<HTMLElement>(".discussion-shell");
     if (!panel) throw new Error("discussion panel not found");
 
     const slug = panel.dataset.slug!;
-    const ENDPOINT = `${SUPABASE_URL}/rest/v1/discussion_entries`;
-
-    const baseHeaders: Record<string, string> = {
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-        "Content-Type": "application/json",
-    };
+    const entriesCol = collection(db, "discussion_entries");
 
     const entriesEl = panel.querySelector<HTMLElement>(".disc-entries")!;
     const form = panel.querySelector<HTMLFormElement>(".disc-form")!;
@@ -89,17 +93,16 @@ const { slug } = Astro.props;
     const submitBtn = panel.querySelector<HTMLButtonElement>(".disc-submit-btn")!;
     const statusEl = panel.querySelector<HTMLElement>(".disc-status")!;
 
-    const formatDate = (iso: string) =>
-        new Date(iso).toLocaleDateString("en-US", {
+    const formatDate = (ts: Timestamp) =>
+        ts.toDate().toLocaleDateString("en-US", {
             year: "numeric", month: "short", day: "numeric",
         });
 
     interface Entry {
-        id: string;
         handle: string;
         message: string;
         is_admin: boolean;
-        created_at: string;
+        created_at: Timestamp;
     }
 
     const renderEntries = (entries: Entry[]) => {
@@ -134,12 +137,14 @@ const { slug } = Astro.props;
 
     const loadEntries = async () => {
         try {
-            const res = await fetch(
-                `${ENDPOINT}?slug=eq.${encodeURIComponent(slug)}&order=created_at.asc&limit=200`,
-                { headers: baseHeaders }
+            const q = query(
+                entriesCol,
+                where("slug", "==", slug),
+                orderBy("created_at", "asc"),
+                limit(200)
             );
-            if (!res.ok) throw new Error();
-            renderEntries(await res.json());
+            const snap = await getDocs(q);
+            renderEntries(snap.docs.map((d) => d.data() as Entry));
         } catch {
             entriesEl.innerHTML = "";
             const p = document.createElement("p");
@@ -163,12 +168,13 @@ const { slug } = Astro.props;
         statusEl.textContent = "sending...";
 
         try {
-            const res = await fetch(ENDPOINT, {
-                method: "POST",
-                headers: { ...baseHeaders, "Prefer": "return=minimal" },
-                body: JSON.stringify({ slug, handle, message }),
+            await addDoc(entriesCol, {
+                slug,
+                handle,
+                message,
+                is_admin: false,
+                created_at: serverTimestamp(),
             });
-            if (!res.ok) throw new Error();
             statusEl.textContent = "comment posted.";
             handleInput.value = "";
             messageInput.value = "";

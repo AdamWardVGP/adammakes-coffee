@@ -1,16 +1,14 @@
 ---                                                                                                                                                                              
-title: "Hire one. No PM. Port this 7-year-old iOS app to Android."                                                                                                         
-description: "The most useful thing I did that year was not do that."
+title: "Hire one. Port a 7-year-old iOS app to Android."                                                                                                         
+description: "The most useful thing I did that year was build something else."
 date: 2026-07-19
 ---        
-
-# Hire one. No PM. Port this 7-year-old iOS app to Android.
 
 That was the brief. Word for word.
 
 Seven years of iOS made by a team of four iOS developers - none of them would help build it. The project was an enterprise drone platform linked to a photogrammetry pipeline, cloud sync, fleet metrics, eight flight plan modes, three auth services, preflight safety checks, the list goes on. And the target was roughly 90% parity. All of it on a controller six years behind modern hardware, too underpowered to run our own Maps SDK.
 
-I was hire one. I had no product manager, no designers. I had no drone experience.
+I was the first hire. I had no product manager, no designers. I had no drone experience.
 
 I also didn't build that app.
 

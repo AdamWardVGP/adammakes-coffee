@@ -918,34 +918,33 @@ li:has(a.sentry:hover) .sviews {
 })();
 
 // ── view counts (read-only, no increment) ──
-(function () {
-    const SUPABASE_URL = "https://vccaywqqehnttlfxozvz.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_2jqlAiR_WCbai36xXS8idw_0-_mMOkz";
+(async function () {
+    const { db } = await import("../../lib/firebase");
+    const { collection, query, where, documentId, getDocs } = await import("firebase/firestore");
 
     const items = Array.from(document.querySelectorAll<HTMLElement>('#slist-scroll li[data-slug]'));
     if (!items.length) return;
 
     const slugs = items.map(li => li.dataset.slug!);
-    const filter = `slug=in.(${slugs.map(s => encodeURIComponent(s)).join(',')})`;
 
-    fetch(`${SUPABASE_URL}/rest/v1/page_views?${filter}&select=slug,views`, {
-        headers: {
-            "apikey": SUPABASE_ANON_KEY,
-            "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-        },
-    })
-        .then(r => r.ok ? r.json() : [])
-        .then((rows: { slug: string; views: number }[]) => {
-            const bySlug: Record<string, number> = {};
-            rows.forEach(r => { bySlug[r.slug] = r.views; });
-            items.forEach(li => {
-                const slug = li.dataset.slug!;
-                const countEl = li.querySelector('.sview-count');
-                if (countEl && bySlug[slug] != null) {
-                    countEl.textContent = bySlug[slug].toLocaleString();
-                }
-            });
-        })
-        .catch(() => {});
+    // Firestore 'in' queries cap at 30 values — chunk defensively.
+    const chunks: string[][] = [];
+    for (let i = 0; i < slugs.length; i += 30) chunks.push(slugs.slice(i, i + 30));
+
+    try {
+        const bySlug: Record<string, number> = {};
+        for (const chunk of chunks) {
+            const q = query(collection(db, "page_views"), where(documentId(), "in", chunk));
+            const snap = await getDocs(q);
+            snap.forEach(doc => { bySlug[doc.id] = doc.data().views; });
+        }
+        items.forEach(li => {
+            const slug = li.dataset.slug!;
+            const countEl = li.querySelector('.sview-count');
+            if (countEl && bySlug[slug] != null) {
+                countEl.textContent = bySlug[slug].toLocaleString();
+            }
+        });
+    } catch {}
 })();
 </script>

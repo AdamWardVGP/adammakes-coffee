@@ -11,8 +11,8 @@ const { slug } = Astro.props;
 </p>
 
 <script>
-    const SUPABASE_URL = "https://vccaywqqehnttlfxozvz.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_2jqlAiR_WCbai36xXS8idw_0-_mMOkz";
+    import { db } from "../lib/firebase";
+    import { doc, getDoc, runTransaction } from "firebase/firestore";
 
     const el = document.querySelector<HTMLElement>(".view-counter");
     const countEl = el?.querySelector<HTMLElement>(".vc-count");
@@ -21,38 +21,28 @@ const { slug } = Astro.props;
     if (slug && countEl) {
         const sessionKey = `viewed:${slug}`;
         const alreadyCounted = sessionStorage.getItem(sessionKey);
+        const ref = doc(db, "page_views", slug);
 
         if (!alreadyCounted) {
             // First visit this session — increment
             sessionStorage.setItem(sessionKey, "1");
-            fetch(`${SUPABASE_URL}/rest/v1/rpc/increment_view`, {
-                method: "POST",
-                headers: {
-                    "apikey": SUPABASE_ANON_KEY,
-                    "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ page_slug: slug }),
+            runTransaction(db, async (tx) => {
+                const snap = await tx.get(ref);
+                const next = (snap.data()?.views ?? 0) + 1;
+                tx.set(ref, { views: next });
+                return next;
             })
-                .then((r) => r.ok ? r.json() : null)
                 .then((count) => {
-                    if (typeof count === "number") {
-                        countEl.textContent = count.toLocaleString();
-                    }
+                    countEl.textContent = count.toLocaleString();
                 })
                 .catch(() => {});
         } else {
             // Already counted this session — just read the current count
-            fetch(`${SUPABASE_URL}/rest/v1/page_views?slug=eq.${encodeURIComponent(slug)}&select=views`, {
-                headers: {
-                    "apikey": SUPABASE_ANON_KEY,
-                    "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-                },
-            })
-                .then((r) => r.ok ? r.json() : null)
-                .then((rows) => {
-                    if (Array.isArray(rows) && rows[0]?.views != null) {
-                        countEl.textContent = rows[0].views.toLocaleString();
+            getDoc(ref)
+                .then((snap) => {
+                    const views = snap.data()?.views;
+                    if (typeof views === "number") {
+                        countEl.textContent = views.toLocaleString();
                     }
                 })
                 .catch(() => {});
