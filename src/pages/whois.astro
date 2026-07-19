@@ -17,6 +17,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     <span class="terminal-title">terminal - whois adam</span>
                 </div>
                 <div class="terminal-screen">
+                <div class="terminal-screen-inner">
 
                     <figure class="crt-frame" aria-label="Portrait of Adam">
                         <div class="ascii-top" aria-hidden="true">
@@ -65,6 +66,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         <span class="blink-cursor" aria-hidden="true">&#x2588;</span>
                     </p>
 
+                </div>
                 </div>
             </div>
         </section>
@@ -262,9 +264,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 [data-tw] { display: none; }
 
 /* ══ fixed-height terminal that fills up ══ */
+/* outer .terminal-screen stays fixed-size and unscrolled, so its
+   global scanline/tint overlay (::before/::after) always covers the
+   full box; the inner wrapper does the actual scrolling. */
 
 .terminal-screen {
     height: 660px;
+    overflow: hidden;
+}
+
+.terminal-screen-inner {
+    position: relative;
+    height: 100%;
     overflow-y: auto;
     scroll-behavior: smooth;
 }
@@ -384,7 +395,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const sleep = ms => new Promise(r => setTimeout(r, ms));
-    const screen = document.querySelector('.terminal-screen');
+    const screen = document.querySelector('.terminal-screen-inner');
 
     // ── Typing cursor ───────────────────────────────────────────────────────
     const typeCursor = document.createElement('span');
