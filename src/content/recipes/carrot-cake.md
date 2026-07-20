@@ -2,6 +2,8 @@
 title: "Carrot Cake"
 date: 2026-02-24
 description: "The best damn browned-butter carrot cake you'll ever eat + a light cream cheese-mascarpone whipped frosting."
+category: "Desserts"
+tabloid: "Veggies never tasted so good."
 ---
 
 This is the carrot cake from Reddit user AshamedTax8008. They called it award winning and they were right. Honestly the cake recipe is dialed in, but "the spice must flow" so I added more + I like molasses so I used dark brown sugar.

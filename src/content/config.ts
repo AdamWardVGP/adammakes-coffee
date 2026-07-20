@@ -13,6 +13,8 @@ const recipes = defineCollection({
         title: z.string(),
         date: z.date(),
         description: z.string().optional(),
+        category: z.string().optional(),
+        tabloid: z.string().optional(),
     }),
 });
 

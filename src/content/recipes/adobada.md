@@ -2,6 +2,8 @@
 title: "Adobada Marinade"
 date: 2026-02-28
 description: "I went to Mexico one time, had this - It's great. Pork with chiles and pineapple? Yum. I still can't get it right. Don't follow this recipe."
+category: "Javi's Corner"
+tabloid: "PORK & PINEAPPLE CAUGHT! Locals shocked!"
 ---
 
 I went to Mexico one time, had this, and now I keep trying to recreate it.

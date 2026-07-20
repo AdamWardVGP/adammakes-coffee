@@ -2,28 +2,548 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const recipes = await getCollection("recipes");
+const recipes = (await getCollection("recipes"))
+    .sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+const paged = recipes.map((recipe, i) => ({
+    ...recipe,
+    page: String(4 + i * 3).padStart(2, "0"),
+}));
+
+const stickers = [...recipes]
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+    .slice(0, 4);
+
+const BONUS_CATEGORY = "Javi's Corner";
+const CATEGORY_ORDER = ["Mains", "Sides", "Desserts"];
+
+const sections = new Map<string, typeof paged>();
+for (const recipe of paged) {
+    const cat = recipe.data.category ?? "Recipes";
+    if (!sections.has(cat)) sections.set(cat, []);
+    sections.get(cat)!.push(recipe);
+}
+
+const orderedCategories = [
+    ...CATEGORY_ORDER.filter((c) => sections.has(c)),
+    ...[...sections.keys()].filter((c) => !CATEGORY_ORDER.includes(c) && c !== BONUS_CATEGORY),
+];
+const bonusEntries = sections.get(BONUS_CATEGORY);
 ---
 
 <BaseLayout
-    title="Recipes"
+    title="GRUB!"
     description="Collected recipes with personal tweaks and no nonsense."
 >
-    <h1>Recipes</h1>
-    <p>
-        Disclaimer: I cannot take credit for pretty much any of the recipes here. The vast majority I
-        found, lost, found again and then keep losing - so here they are in one place where I can find them. In alot of circumstances I've
-        made alterations and now I can read them without having to scroll through 8 pages of a life story to get to
-        the content covered up in a narrow column with a bunch of obnoxious ads.
-    </p>
+    <div class="mag-stage">
+    <div class="spread">
 
-    <ul>
-        {recipes.map((recipe) => (
-                <li>
-                    <a href={`/recipes/${recipe.slug}`}>
-                        {recipe.data.title}
+        <!-- COVER PAGE -->
+        <div class="cover">
+            <img class="cover-photo" src="/recipes/theBouche.jpg" alt="Chocolate B&ucirc;che de No&euml;l yule log cake" />
+
+            <div class="cover-top">
+                <span class="issue-tag">ISSUE NO. 12</span>
+                <span>NOT FOR RESALE &middot; KEEP THIS COPY</span>
+            </div>
+
+            <div class="corner-price">HOT<br>THIS<br>MONTH</div>
+
+            <h1 class="masthead">GRUB<span class="bang">!</span></h1>
+            <div class="dek">recipes that talk back</div>
+
+            <div class="stickers">
+                {stickers.map((recipe, i) => (
+                    <a class={`sticker s${i + 1}`} href={`/recipes/${recipe.slug}`}>
+                        <span class="sticker-title">{recipe.data.title}</span>
+                        {recipe.data.tabloid && <small>{recipe.data.tabloid}</small>}
                     </a>
-                </li>
-        ))}
-    </ul>
+                ))}
+            </div>
+
+            <div class="barcode-block">
+                <div class="barcode"></div>
+                <div class="price">$0.00<br>PRINTED AT HOME</div>
+            </div>
+        </div>
+
+        <div class="spine"></div>
+
+        <!-- INDEX PAGE -->
+        <div class="index">
+            <div class="index-head">
+                <h2>CONTENTS</h2>
+                <span>{recipes.length} recipe{recipes.length === 1 ? "" : "s"}</span>
+            </div>
+
+            <div class="index-scroll">
+                {orderedCategories.map((category) => (
+                    <>
+                        <div class="section-label">{category}</div>
+                        {sections.get(category)!.map((recipe) => (
+                            <a class="entry" href={`/recipes/${recipe.slug}`}>
+                                <span class="name">{recipe.data.title}</span>
+                                <span class="leader"></span>
+                                <span class="pg">{recipe.page}</span>
+                            </a>
+                        ))}
+                    </>
+                ))}
+
+                {bonusEntries && (
+                    <div class="bonus-block">
+                        <div class="bonus-row">
+                            <span class="bonus-label-wrap">
+                                <span class="section-label bonus-label">{BONUS_CATEGORY}</span>
+                                <span class="bonus-burst-outer">
+                                    <span class="bonus-burst-inner"><span>BONUS!</span></span>
+                                </span>
+                            </span>
+                        </div>
+                        {bonusEntries.map((recipe) => (
+                            <a class="entry" href={`/recipes/${recipe.slug}`}>
+                                <span class="name">{recipe.data.title}</span>
+                                <span class="leader"></span>
+                                <span class="pg">{recipe.page}</span>
+                            </a>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            <div class="pullquote">&ldquo;stop garnishing. start eating.&rdquo; &mdash; this issue</div>
+
+            <div class="spoon-wrap" tabindex="0">
+                <div class="spoon-bubble">It looks like you're cooking a meal! Would you like some help?</div>
+                <img class="spoon-btn" src="/recipes/Spoony.png" alt="Spoony the spoon mascot" />
+            </div>
+        </div>
+
+    </div>
+    </div>
 </BaseLayout>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Archivo+Black&display=swap');
+
+.mag-stage {
+    --paper: #f2ead9;
+    --paper-dark: #e6dcc4;
+    --ink: #1c1a17;
+    --hotpink: #ff3d7f;
+    --yolk: #ffcc00;
+    --teal: #00a99d;
+    --grape: #6b4e9e;
+    --tape: rgba(255,255,255,.55);
+
+    border-radius: 8px;
+    background:
+        radial-gradient(circle at 20% 20%, #3a3550 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, #1f2a3a 0%, transparent 40%),
+        #14131c;
+    padding: 40px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+}
+
+.spread {
+    display: flex;
+    width: min(1100px, 100%);
+    min-height: 640px;
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.04);
+    transform: rotate(-0.4deg);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* ---------- LEFT: COVER ---------- */
+.cover {
+    position: relative;
+    flex: 1.05;
+    padding: 22px 22px 30px;
+    color: var(--ink);
+    overflow: hidden;
+}
+
+.cover-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 55%;
+    z-index: 0;
+}
+
+.cover::before {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+        repeating-linear-gradient(0deg, rgba(0,0,0,.04) 0px, rgba(0,0,0,.04) 2px, transparent 2px, transparent 4px),
+        linear-gradient(160deg, rgba(255,61,127,.72) 0%, rgba(255,61,127,.72) 38%, rgba(255,204,0,.72) 38%, rgba(255,204,0,.72) 100%);
+    z-index: 1;
+}
+
+.cover::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 10%, rgba(255,255,255,.25), transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.cover-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+    font-weight: 700;
+    position: relative;
+    z-index: 2;
+}
+.issue-tag {
+    background: var(--ink); color: var(--paper);
+    padding: 3px 7px; border-radius: 2px; transform: rotate(-2deg);
+}
+
+.masthead {
+    margin: 6px 0 2px;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 76px;
+    line-height: .85;
+    letter-spacing: -1px;
+    text-shadow: 4px 4px 0 var(--ink);
+    -webkit-text-stroke: 1px var(--ink);
+    color: var(--paper);
+    transform: rotate(-1.5deg);
+    position: relative;
+    z-index: 2;
+}
+.masthead .bang {
+    display: inline-block;
+    color: var(--teal);
+    -webkit-text-stroke: 1px var(--ink);
+    transform: rotate(8deg) translateY(-4px);
+}
+
+.dek {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    background: var(--ink);
+    color: var(--yolk);
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 20px;
+    transform: rotate(-1deg);
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 2;
+}
+
+.stickers {
+    position: relative;
+    height: 420px;
+    z-index: 2;
+}
+
+.sticker {
+    position: absolute;
+    display: block;
+    max-width: 200px;
+    cursor: pointer;
+    transition: transform .18s ease;
+    text-decoration: none;
+}
+.sticker-title {
+    display: block;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 20px;
+    line-height: 1.05;
+    letter-spacing: -.4px;
+    text-transform: uppercase;
+    color: var(--paper);
+    -webkit-text-stroke: 1px var(--ink);
+    text-shadow: 2px 2px 0 var(--ink);
+}
+.sticker small {
+    display: inline-block;
+    margin-top: 6px;
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    box-shadow: 2px 2px 0 var(--ink);
+    padding: 4px 8px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 8.5px;
+    line-height: 1.3;
+    letter-spacing: .01em;
+    text-transform: uppercase;
+    color: var(--hotpink);
+    transform: rotate(-1deg);
+}
+.sticker:hover {
+    transform: translateY(-4px) rotate(0deg) scale(1.04);
+    z-index: 10;
+}
+
+.s1 { top: 0;   left: 2%;  transform: rotate(-6deg); }
+.s2 { top: 14%; left: 52%; transform: rotate(5deg); }
+.s2 .sticker-title { color: var(--yolk); }
+.s3 { top: 48%; left: 4%;  transform: rotate(4deg); }
+.s3 .sticker-title { color: var(--teal); }
+.s4 { top: 56%; left: 54%; transform: rotate(-3deg); }
+.s4 .sticker-title { color: var(--grape); }
+
+.barcode-block {
+    position: absolute;
+    bottom: 16px; left: 22px;
+    display: flex; align-items: center; gap: 8px;
+    z-index: 2;
+}
+.barcode {
+    width: 70px; height: 34px;
+    background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 4px, var(--ink) 4px 5px, transparent 5px 8px);
+}
+.price {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; font-weight: 700;
+}
+
+.corner-price {
+    position: absolute; top: 14px; right: 16px;
+    width: 58px; height: 58px; border-radius: 50%;
+    background: var(--ink); color: var(--yolk);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; font-family: 'Baloo 2',sans-serif; font-weight: 700;
+    font-size: 10px; line-height: 1.1;
+    transform: rotate(8deg);
+    border: 2px dashed var(--yolk);
+    z-index: 2;
+}
+
+/* ---------- SPINE ---------- */
+.spine {
+    width: 26px;
+    background: linear-gradient(90deg, #0c0b10, #201d29 40%, #0c0b10);
+    box-shadow: inset 0 0 20px rgba(0,0,0,.8);
+}
+
+/* ---------- RIGHT: INDEX ---------- */
+.index {
+    flex: 1;
+    background: var(--paper-dark);
+    padding: 26px 26px 20px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    color: var(--ink);
+}
+
+.index-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 8px; margin-bottom: 4px;
+}
+.index-head h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 22px;
+    margin: 0;
+    color: var(--teal);
+    -webkit-text-stroke: 1px var(--ink);
+    text-shadow: 2px 2px 0 var(--ink);
+}
+.index-head span {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.index-scroll {
+    overflow-y: auto;
+    margin-top: 8px;
+    padding-right: 6px;
+    flex: 1;
+    max-height: 420px;
+}
+.index-scroll::-webkit-scrollbar { width: 8px; }
+.index-scroll::-webkit-scrollbar-thumb { background: var(--ink); border-radius: 4px; }
+.index-scroll::-webkit-scrollbar-track { background: transparent; }
+
+.section-label {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: #fff;
+    background: var(--hotpink);
+    display: inline-block;
+    padding: 2px 8px;
+    margin: 16px 0 8px;
+    transform: rotate(-1deg);
+}
+.section-label:first-child { margin-top: 2px; }
+
+/* ---------- BONUS starburst ---------- */
+
+.bonus-block {
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 2px dashed rgba(0,0,0,.25);
+}
+
+.bonus-row {
+    margin: 18px 0 8px;
+}
+
+.bonus-label-wrap {
+    position: relative;
+    display: inline-block;
+    margin-left: 29px;
+}
+
+.bonus-burst-outer,
+.bonus-burst-inner {
+    clip-path: polygon(
+        50% 0%, 61% 18%, 82% 10%, 79% 33%, 100% 38%,
+        83% 53%, 94% 75%, 69% 68%, 63% 90%, 50% 74%,
+        37% 90%, 31% 68%, 6% 75%, 17% 53%, 0% 38%,
+        21% 33%, 18% 10%, 39% 18%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bonus-burst-outer {
+    position: absolute;
+    top: -28px;
+    left: -30px;
+    width: 58px;
+    height: 58px;
+    background: var(--ink);
+    transform: rotate(-6deg);
+    z-index: 2;
+}
+
+.bonus-burst-inner {
+    width: 50px;
+    height: 50px;
+    background: var(--yolk);
+}
+
+.bonus-burst-inner span {
+    display: block;
+    transform: rotate(6deg);
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 9px;
+    letter-spacing: -.2px;
+    line-height: 1;
+    color: var(--ink);
+}
+
+.bonus-label {
+    margin: 0;
+    background: var(--grape);
+    margin-left: 10px;
+}
+
+.entry {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 9px 2px;
+    text-decoration: none;
+    color: var(--ink);
+    border-bottom: 1px dotted rgba(0,0,0,.2);
+    cursor: pointer;
+}
+.entry .name {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    white-space: nowrap;
+}
+.entry .leader {
+    flex: 1;
+    border-bottom: 1px dotted rgba(0,0,0,.35);
+    transform: translateY(-4px);
+}
+.entry .pg {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+}
+.entry:hover .name { color: var(--hotpink); }
+.entry:hover { background: rgba(255,61,127,.08); }
+
+.pullquote {
+    margin-top: 14px;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    border-left: 3px solid var(--teal);
+    padding: 6px 10px;
+    background: rgba(0,169,157,.08);
+    transform: rotate(-.4deg);
+}
+
+/* ---------- SPOON MASCOT EASTER EGG ---------- */
+.spoon-wrap {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    display: flex; align-items: flex-end; gap: 8px;
+    z-index: 20;
+}
+.spoon-bubble {
+    max-width: 175px;
+    background: #fff;
+    border: 1.5px solid var(--ink);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10.5px;
+    line-height: 1.4;
+    box-shadow: 3px 3px 0 rgba(0,0,0,.15);
+    opacity: 0; transform: translateY(6px) scale(.96);
+    transition: all .18s ease;
+    pointer-events: none;
+    position: relative;
+}
+.spoon-bubble::after {
+    content: "";
+    position: absolute;
+    top: 50%; right: -7px;
+    width: 12px; height: 12px;
+    background: #fff;
+    border-top: 1.5px solid var(--ink);
+    border-right: 1.5px solid var(--ink);
+    transform: translateY(-50%) rotate(45deg);
+}
+.spoon-wrap:hover .spoon-bubble,
+.spoon-wrap:focus-within .spoon-bubble {
+    opacity: 1; transform: translateY(0) scale(1);
+}
+.spoon-btn {
+    width: 68px;
+    height: auto;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform .18s ease;
+    filter: drop-shadow(2px 3px 0 rgba(0,0,0,.25));
+}
+.spoon-wrap:hover .spoon-btn { transform: rotate(-8deg) scale(1.05); }
+
+@media (max-width: 760px) {
+    .mag-stage { padding: 20px 12px; }
+    .spread { flex-direction: column; }
+    .spine { width: 100%; height: 14px; }
+    .masthead { font-size: 52px; }
+    .stickers { height: 340px; }
+    .cover-top span:last-child { display: none; }
+}
+</style>
